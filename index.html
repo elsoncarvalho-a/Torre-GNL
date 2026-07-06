@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07100b">
+  <meta name="description" content="Painel executivo do Projeto Piloto GNL — indicadores operacionais, econômicos e de ciclo.">
+  <title>Projeto Piloto GNL | Painel Executivo</title>
+  <link rel="stylesheet" href="styles.css?v=10">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <header class="topbar shell">
+    <a class="brand" href="#" aria-label="Minas Port — início">
+      <img class="brand-signature" src="assets/logo-minas-port-assinatura.png" alt="Grupo Minas Port — Soluções Integradas">
+    </a>
+    <div class="topbar-actions">
+      <span class="live-dot"><i></i> Dados consolidados</span>
+      <button class="icon-button" id="printButton" type="button" title="Imprimir painel" aria-label="Imprimir painel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">PAINEL EXECUTIVO</p>
+        <h1>TORRE OPERACIONAL <span>GNL</span></h1>
+        <p class="hero-subtitle">Painel executivo <span>|</span> Dados operacionais e econômicos</p>
+        <p class="period-range" id="periodRange"></p>
+        <div class="period-control" aria-label="Selecionar período">
+          <span>Fonte</span>
+          <div class="period-buttons" id="periodButtons"></div>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <img class="truck-photo" src="assets/caminhao-gnl-fundo.png" alt="">
+        <svg class="plant" viewBox="0 0 720 210" preserveAspectRatio="xMidYMax meet">
+          <defs>
+            <linearGradient id="skyGlow" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b4f000" stop-opacity=".4"/><stop offset="1" stop-color="#00dd70" stop-opacity="0"/></linearGradient>
+            <linearGradient id="truckGreen" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9bc900"/><stop offset="1" stop-color="#0f8f3b"/></linearGradient>
+          </defs>
+          <path class="horizon" d="M0 171H720"/>
+          <g class="factory">
+            <path d="M5 171v-40h22v40m8 0V99h15v72m13 0v-51h27v51m9 0V65h12v106m14 0v-88h15v88m13 0v-49h34v49m12 0V92h13v79m16 0v-57h27v57"/>
+            <path class="thin" d="M13 130V91m8 39V78m83-14V34m6 30V20m22 62V48m8 34V37m62 54V53m7 38V69M0 147h243M41 108h168M72 132h145"/>
+            <circle cx="110" cy="17" r="5"/><circle cx="139" cy="34" r="4"/><circle cx="209" cy="66" r="4"/>
+          </g>
+          <g class="truck" transform="translate(245 67)">
+            <path class="tank" d="M207 21h174c37 0 54 27 54 54s-17 54-54 54H207c-28 0-43-24-43-54s15-54 43-54Z"/>
+            <ellipse class="tank-end" cx="210" cy="75" rx="45" ry="54"/>
+            <path class="tank-line" d="M257 22v106m62-106v106m62-106v106"/>
+            <path class="cab" d="M5 20h119l39 48v74H0V50Z"/>
+            <path class="cab-green" d="M3 83h157v59H0V101Z"/>
+            <path class="window" d="M25 34h79l28 35H19Z"/>
+            <path class="window-cut" d="M80 34v35"/>
+            <path class="chassis" d="M21 137h405v13H21Z"/>
+            <g class="wheels"><circle cx="46" cy="147" r="23"/><circle cx="132" cy="147" r="23"/><circle cx="350" cy="147" r="23"/><circle cx="408" cy="147" r="23"/></g>
+            <g class="hubs"><circle cx="46" cy="147" r="9"/><circle cx="132" cy="147" r="9"/><circle cx="350" cy="147" r="9"/><circle cx="408" cy="147" r="9"/></g>
+            <text x="37" y="113">GNL</text>
+          </g>
+          <path class="glow-road" d="M180 202C335 151 542 157 715 191"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="kpi-grid" id="kpiGrid" aria-label="Principais indicadores"></section>
+
+    <section class="dashboard-grid">
+      <article class="panel base-panel">
+        <div class="panel-heading"><span class="panel-number">01</span><div><p>Premissas</p><h2>Base do estudo</h2></div></div>
+        <dl class="study-list" id="studyList"></dl>
+      </article>
+
+      <article class="panel performance-panel">
+        <div class="panel-heading"><span class="panel-number">02</span><div><p>Eficiência</p><h2>Desempenho operacional</h2></div></div>
+        <div class="mini-grid" id="performanceGrid"></div>
+      </article>
+
+      <article class="panel economy-panel">
+        <div class="panel-heading"><span class="panel-number">03</span><div><p>Resultado</p><h2>Comparativo econômico</h2></div></div>
+        <div class="cost-cards" id="costCards"></div>
+        <div class="bar-comparison">
+          <div class="bar-row"><span>GNL</span><div class="bar-track"><i style="width:51%"></i></div><strong>51%</strong></div>
+          <div class="bar-row diesel"><span>Diesel</span><div class="bar-track"><i style="width:100%"></i></div><strong>100%</strong></div>
+        </div>
+        <div class="saving"><strong id="savingValue">49%</strong><span>de economia operacional com GNL</span></div>
+      </article>
+
+      <article class="panel compare-panel">
+        <div class="panel-heading"><span class="panel-number">04</span><div><p>Risco</p><h2>Sensibilidade de cenários</h2></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Cenário</th><th id="prevMonthLabel">Preço GNL</th><th id="currentMonthLabel">Preço Diesel</th><th>Economia</th></tr></thead>
+            <tbody id="comparisonBody"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <section class="insight-grid">
+      <article class="panel insight"><div class="insight-icon">↗</div><div><h2>Leitura executiva</h2><ul id="advanceList"></ul></div></article>
+      <article class="panel insight"><div class="insight-icon">●</div><div><h2>Riscos e lacunas</h2><ul id="statusList"></ul></div></article>
+      <article class="panel insight"><div class="insight-icon">»</div><div><h2>Ações recomendadas</h2><ul id="nextList"></ul></div></article>
+    </section>
+
+    <section class="panel time-section">
+      <div class="section-title"><div><p>Indicadores derivados da planilha</p><h2>Projeções e sustentabilidade</h2></div><span class="legend"><i class="good"></i>Positivo <i class="warn"></i>Premissa <i class="bad"></i>Lacuna</span></div>
+      <div class="time-grid" id="timeGrid"></div>
+    </section>
+
+    <section class="panel stop-section">
+      <div class="section-title"><div><p>Robustez financeira</p><h2>Cenários de sensibilidade</h2></div><span class="trip-count">Base da planilha</span></div>
+      <div class="stop-grid" id="stopGrid"></div>
+    </section>
+  </main>
+
+  <footer class="shell footer">
+    <div class="footer-claim"><span class="leaf">◒</span><strong>GNL:</strong> eficiência, economia e sustentabilidade <em>para a operação.</em></div>
+    <div class="signature"><strong>Elson da Silva Carvalho</strong><span>Gerente Geral Terminais &amp; Transporte Interno</span></div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="dados.js?v=4"></script>
+  <script src="script.js?v=4"></script>
+</body>
+</html>
