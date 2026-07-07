@@ -13,6 +13,20 @@
 @media(max-width:820px){.stop-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.stop-grid{grid-template-columns:1fr}}
 
+/* Correções finais: logo em HTML/CSS, botão sem sobreposição e comparativo mensal */
+.brand.brand-text{position:relative;gap:5px;justify-content:center;padding:12px 14px 12px 14px;background:#020403;border:1px solid rgba(155,201,0,.42);overflow:hidden}
+.brand-title{font-size:16px;letter-spacing:1.2px;color:#d9dedb;white-space:nowrap}
+.brand-title strong{color:#fff;font-weight:900}
+.brand-line{width:178px;height:4px;background:linear-gradient(90deg,#dfe5df 0 62%,var(--lime) 62% 100%);box-shadow:0 0 8px rgba(155,201,0,.25)}
+.brand-subtitle{font-size:8px;letter-spacing:1.4px;color:#d6ddd8;white-space:nowrap}
+.brand-arrow{position:absolute;right:13px;bottom:20px;width:58px;height:17px;background:var(--lime);clip-path:polygon(0 35%,72% 35%,72% 0,100% 50%,72% 100%,72% 65%,0 65%)}
+.brand.brand-text:after{display:none}
+.brand-signature{display:none!important}
+.month-compare{margin-bottom:10px;border:1px solid rgba(155,201,0,.22);border-radius:9px;padding:8px;background:rgba(155,201,0,.035)}
+.month-compare h3{margin:0 0 5px;color:var(--lime);font-size:10px;text-transform:uppercase;letter-spacing:.8px}
+.month-compare table{font-size:8.5px;min-width:0}
+.month-compare th,.month-compare td{padding:5px 4px}
+
 /* Imagens oficiais fornecidas para o cabeçalho */
 .brand:after{display:none}
 .brand-mark{width:176px;height:27px;object-fit:cover;object-position:center 61%;margin-top:6px;background:#fff;border-radius:1px}
@@ -78,7 +92,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
   .hero h1{font-size:38px;letter-spacing:-1.2px;line-height:1;margin:0}
   .hero-subtitle{font-size:15px;letter-spacing:1px;color:#8dae00;margin:4px 0 0;font-weight:700}.hero-subtitle span{color:#c2d29b}
   .period-range{font-size:12px;color:#a6ada7;margin:7px 0 0}
-  .period-control{position:absolute;left:650px;bottom:7px;gap:7px;z-index:6}
+  .period-control{position:static;margin-top:5px;gap:7px;z-index:6}
   .period-control>span{display:none}.period-buttons{padding:2px;border-radius:6px;background:rgba(0,0,0,.55)}
   .period-buttons button{padding:4px 9px;font-size:9px;border-radius:4px}
   .hero-art{right:24px;bottom:-3px;width:min(57%,920px);height:112px;overflow:hidden;opacity:.92}

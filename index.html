@@ -13,8 +13,11 @@
   <div class="ambient ambient-b"></div>
 
   <header class="topbar shell">
-    <a class="brand" href="#" aria-label="Minas Port — início">
-      <img class="brand-signature" src="assets/logo-minas-port-assinatura.png" alt="Grupo Minas Port — Soluções Integradas">
+    <a class="brand brand-text" href="#" aria-label="Grupo Minas Port — Soluções Integradas">
+      <span class="brand-title">GRUPO <strong>MINAS PORT</strong></span>
+      <span class="brand-line"></span>
+      <span class="brand-subtitle">SOLUÇÕES INTEGRADAS</span>
+      <span class="brand-arrow"></span>
     </a>
     <div class="topbar-actions">
       <span class="live-dot"><i></i> Dados consolidados</span>
@@ -92,6 +95,13 @@
 
       <article class="panel compare-panel">
         <div class="panel-heading"><span class="panel-number">04</span><div><p>Risco</p><h2>Sensibilidade de cenários</h2></div></div>
+        <div class="month-compare">
+          <h3>Comparativo mês anterior</h3>
+          <table>
+            <thead><tr><th>Indicador</th><th>Maio/2026</th><th>Atual</th><th>Variação</th></tr></thead>
+            <tbody id="monthComparisonBody"></tbody>
+          </table>
+        </div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Cenário</th><th id="prevMonthLabel">Preço GNL</th><th id="currentMonthLabel">Preço Diesel</th><th>Economia</th></tr></thead>

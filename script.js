@@ -56,6 +56,15 @@ const money = value => `R$ ${nf.format(value)}`;
 let p = dashboardData.periods[dashboardData.periodoInicial];
 
 const icons = ["⌁", "◉", "◌", "◇", "$", "$", "◒", "↗"];
+const PREVIOUS_MONTH = {
+  label: "Maio/2026",
+  distance: 14290.3,
+  gnlKg: 5005.34,
+  nm3: 6957.42,
+  performance: 2.86,
+  costGnl: 1.32,
+  economy: 49
+};
 
 function parseCsv(text) {
   const rows = [];
@@ -248,6 +257,29 @@ function renderSensitivityTable() {
   }).join("");
 }
 
+function variation(current, previous) {
+  if (!previous) return 0;
+  return ((current - previous) / previous) * 100;
+}
+
+function renderMonthComparison() {
+  const rows = [
+    ["Distância percorrida", PREVIOUS_MONTH.distance, p.distance, "km", nf1],
+    ["Consumo GNL", PREVIOUS_MONTH.gnlKg, p.gnlKg, "kg", nf],
+    ["Consumo Nm³", PREVIOUS_MONTH.nm3, p.nm3, "Nm³", nf],
+    ["Rendimento", PREVIOUS_MONTH.performance, p.performance, "km/kg", nf],
+    ["Custo GNL", PREVIOUS_MONTH.costGnl, p.costGnl, "R$/km", nf],
+    ["Economia operacional", PREVIOUS_MONTH.economy, p.economy, "%", nf1]
+  ];
+  document.querySelector("#monthComparisonBody").innerHTML = rows.map(([name, prev, current, unit, formatter]) => {
+    const delta = variation(current, prev);
+    const cls = Math.abs(delta) < 0.05 ? "flat" : delta > 0 ? "up" : "down";
+    const prefix = unit.startsWith("R$") ? "R$ " : "";
+    const suffix = unit.startsWith("R$") ? "/km" : unit === "%" ? "%" : ` ${unit}`;
+    return `<tr><td>${name}</td><td>${prefix}${formatter.format(prev)}${suffix}</td><td>${prefix}${formatter.format(current)}${suffix}</td><td class="variation ${cls}">${delta >= 0 ? "+" : ""}${nf1.format(delta)}%</td></tr>`;
+  }).join("");
+}
+
 function renderNarrative() {
   const stress = dashboardData.scenarios.find(s => s.name === "Stress");
   const optimistic = dashboardData.scenarios.find(s => s.name === "Otimista");
@@ -291,7 +323,7 @@ function renderScenarios() {
 function render() {
   p = dashboardData.periods[dashboardData.periodoInicial];
   renderSource(); renderKpis(); renderStudy(); renderPerformance(); renderEconomy();
-  renderSensitivityTable(); renderNarrative(); renderProjections(); renderScenarios();
+  renderSensitivityTable(); renderMonthComparison(); renderNarrative(); renderProjections(); renderScenarios();
   document.title = `Torre Operacional GNL | ${dashboardData.fonte.geradoEm}`;
 }
 
