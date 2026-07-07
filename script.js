@@ -1,6 +1,21 @@
+  if (economy) current.economy = economy <= 1 ? economy * 100 : economy;
   if (!current.gnlLiters && current.gnlKg && current.density) current.gnlLiters = current.gnlKg / current.density;
   if (!current.litersPerKm && current.gnlLiters && current.distance) current.litersPerKm = current.gnlLiters / current.distance;
   if (!current.dieselEquivalent && current.distance && current.dieselPerformance) current.dieselEquivalent = current.distance / current.dieselPerformance;
+  if (current.gnlKg && current.density) current.gnlLiters = current.gnlLiters || current.gnlKg / current.density;
+  if (current.gnlLiters && current.distance) current.litersPerKm = current.litersPerKm || current.gnlLiters / current.distance;
+  if (current.tankLiters && current.density) current.tankKg = current.tankKg || current.tankLiters * current.density;
+  if (current.tankKg && current.performance) current.theoreticalAutonomy = current.theoreticalAutonomy || current.tankKg * current.performance;
+  current.autonomy = current.autonomy || current.theoreticalAutonomy;
+  current.dieselEquivalent = current.dieselEquivalent || (current.distance && current.dieselPerformance ? current.distance / current.dieselPerformance : 0);
+  current.priceGnl = current.priceGnl || 0;
+  current.priceDiesel = current.priceDiesel || 0;
+
+  base.scenarios = base.scenarios?.length ? base.scenarios : [
+    { name: "Base", priceGnl: current.priceGnl, priceDiesel: current.priceDiesel, costGnl: current.costGnl, economy: current.economy },
+    { name: "GNL +10%", priceGnl: current.priceGnl * 1.1, priceDiesel: current.priceDiesel, costGnl: current.costGnl * 1.1, economy: current.costDiesel ? ((current.costDiesel - current.costGnl * 1.1) / current.costDiesel) * 100 : 0 },
+    { name: "Diesel -10%", priceGnl: current.priceGnl, priceDiesel: current.priceDiesel * 0.9, costGnl: current.costGnl, economy: current.costDiesel ? ((current.costDiesel * 0.9 - current.costGnl) / (current.costDiesel * 0.9)) * 100 : 0 }
+  ];
 
   base.fonte = {
     ...base.fonte,
