@@ -156,6 +156,10 @@ function buildDataFromSheet(rows) {
   current.agendamentosSemCte = getNumber("agendamentos_sem_cte") || current.agendamentosSemCte;
   current.status = getText("status_economia") || current.status;
 
+  // Fechamento solicitado: os dados publicados correspondem ao período de junho/2026.
+  current.label = "Fechamento Junho";
+  current.range = "01 de junho de 2026 a 30 de junho de 2026";
+
   const economy = getNumber("economia_percentual");
   if (economy) current.economy = economy <= 1 ? economy * 100 : economy;
   if (!current.gnlLiters && current.gnlKg && current.density) current.gnlLiters = current.gnlKg / current.density;
@@ -198,6 +202,32 @@ async function loadSheetData() {
 function renderSource() {
   document.querySelector("#periodRange").textContent = `▣ ${p.range} | fonte: ${dashboardData.fonte.arquivo}`;
   document.querySelector("#periodButtons").innerHTML = `<button type="button" class="active">${p.label}</button>`;
+}
+
+function applyLayoutFixes() {
+  const brand = document.querySelector(".brand");
+  if (brand) {
+    brand.className = "brand brand-text";
+    brand.innerHTML = `
+      <span class="brand-title">GRUPO <strong>MINAS PORT</strong></span>
+      <span class="brand-line"></span>
+      <span class="brand-subtitle">SOLUÇÕES INTEGRADAS</span>
+      <span class="brand-arrow"></span>
+    `;
+  }
+
+  const comparePanel = document.querySelector(".compare-panel .table-wrap");
+  if (comparePanel && !document.querySelector("#monthComparisonBody")) {
+    comparePanel.insertAdjacentHTML("beforebegin", `
+      <div class="month-compare">
+        <h3>Comparativo mês anterior</h3>
+        <table>
+          <thead><tr><th>Indicador</th><th>Maio/2026</th><th>Junho/2026</th><th>Variação</th></tr></thead>
+          <tbody id="monthComparisonBody"></tbody>
+        </table>
+      </div>
+    `);
+  }
 }
 
 function renderKpis() {
@@ -263,6 +293,8 @@ function variation(current, previous) {
 }
 
 function renderMonthComparison() {
+  const body = document.querySelector("#monthComparisonBody");
+  if (!body) return;
   const rows = [
     ["Distância percorrida", PREVIOUS_MONTH.distance, p.distance, "km", nf1],
     ["Consumo GNL", PREVIOUS_MONTH.gnlKg, p.gnlKg, "kg", nf],
@@ -271,7 +303,7 @@ function renderMonthComparison() {
     ["Custo GNL", PREVIOUS_MONTH.costGnl, p.costGnl, "R$/km", nf],
     ["Economia operacional", PREVIOUS_MONTH.economy, p.economy, "%", nf1]
   ];
-  document.querySelector("#monthComparisonBody").innerHTML = rows.map(([name, prev, current, unit, formatter]) => {
+  body.innerHTML = rows.map(([name, prev, current, unit, formatter]) => {
     const delta = variation(current, prev);
     const cls = Math.abs(delta) < 0.05 ? "flat" : delta > 0 ? "up" : "down";
     const prefix = unit.startsWith("R$") ? "R$ " : "";
@@ -321,6 +353,7 @@ function renderScenarios() {
 }
 
 function render() {
+  applyLayoutFixes();
   p = dashboardData.periods[dashboardData.periodoInicial];
   renderSource(); renderKpis(); renderStudy(); renderPerformance(); renderEconomy();
   renderSensitivityTable(); renderMonthComparison(); renderNarrative(); renderProjections(); renderScenarios();

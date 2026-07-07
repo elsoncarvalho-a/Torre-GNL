@@ -77,6 +77,32 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
 @media(max-width:520px){.topbar-actions .live-dot{display:none}.hero h1{font-size:34px}.period-control{align-items:flex-start;flex-direction:column}.kpi-grid{grid-template-columns:1fr}.kpi{min-height:98px}.dashboard-grid{display:block}.dashboard-grid>.panel{margin-bottom:10px}.mini-grid{grid-template-columns:repeat(2,1fr)}.insight-grid{display:block}.insight{margin-bottom:10px}.time-grid,.stop-grid{grid-template-columns:1fr}.section-title{align-items:flex-start;gap:10px}.legend{display:none}.footer-claim{line-height:1.5}}
 @media print{.ambient,.topbar-actions,.period-control,.toast{display:none!important}body{background:#050806!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.shell{width:100%}.hero{min-height:180px}.panel,.kpi{break-inside:avoid}.insight-grid{grid-template-columns:repeat(3,1fr)}.time-grid{grid-template-columns:repeat(7,1fr)}.footer{min-height:70px}}
 
+/* Correção reforçada 2026-07-07 */
+.brand.brand-text{
+  background:#020403!important;
+  border:1px solid rgba(155,201,0,.55)!important;
+  box-shadow:0 0 22px rgba(155,201,0,.1)!important;
+  color:#fff!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  gap:5px!important;
+  overflow:hidden!important;
+}
+.brand.brand-text:after{display:none!important}
+.brand-title{font-size:16px!important;letter-spacing:1.2px!important;color:#d9dedb!important;white-space:nowrap!important}
+.brand-title strong{color:#fff!important;font-weight:900!important}
+.brand-line{display:block!important;width:178px!important;height:4px!important;background:linear-gradient(90deg,#dfe5df 0 62%,var(--lime) 62% 100%)!important}
+.brand-subtitle{font-size:8px!important;letter-spacing:1.4px!important;color:#d6ddd8!important;white-space:nowrap!important}
+.brand-arrow{position:absolute!important;right:13px!important;bottom:20px!important;width:58px!important;height:17px!important;background:var(--lime)!important;clip-path:polygon(0 35%,72% 35%,72% 0,100% 50%,72% 100%,72% 65%,0 65%)!important}
+.brand img,.brand-signature{display:none!important}
+.period-control{position:static!important;margin-top:5px!important}
+.period-buttons button.active{line-height:1.05!important;min-width:88px!important}
+.month-compare{margin-bottom:10px;border:1px solid rgba(155,201,0,.22);border-radius:9px;padding:8px;background:rgba(155,201,0,.035)}
+.month-compare h3{margin:0 0 5px;color:var(--lime);font-size:10px;text-transform:uppercase;letter-spacing:.8px}
+.month-compare table{font-size:8.5px;min-width:0}
+.month-compare th,.month-compare td{padding:5px 4px}
+
 /* Enquadramento executivo 16:9 — fiel à composição do mockup de referência */
 @media (min-width:1251px){
   :root{--radius:10px}
