@@ -108,6 +108,14 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
 .brand.brand-text>*{
   opacity:.01!important;
 }
+.brand.brand-text .official-logo{
+  display:block!important;
+  opacity:1!important;
+  width:100%!important;
+  height:auto!important;
+  max-height:82px!important;
+  object-fit:contain!important;
+}
 .month-compare{margin-bottom:10px;border:1px solid rgba(155,201,0,.22);border-radius:9px;padding:8px;background:rgba(155,201,0,.035)}
 .month-compare h3{margin:0 0 5px;color:var(--lime);font-size:10px;text-transform:uppercase;letter-spacing:.8px}
 .month-compare table{font-size:8.5px;min-width:0}

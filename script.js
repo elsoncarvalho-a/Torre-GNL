@@ -275,10 +275,7 @@ function applyLayoutFixes() {
   if (brand) {
     brand.className = "brand brand-text";
     brand.innerHTML = `
-      <span class="brand-title">GRUPO <strong>MINAS PORT</strong></span>
-      <span class="brand-line"></span>
-      <span class="brand-subtitle">SOLUÇÕES INTEGRADAS</span>
-      <span class="brand-arrow"></span>
+      <img class="official-logo" src="logo-minas-port-assinatura.png" alt="Grupo Minas Port - Soluções Integradas">
     `;
   }
 
