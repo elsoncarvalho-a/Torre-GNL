@@ -97,7 +97,9 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
 .brand-arrow{position:absolute!important;right:13px!important;bottom:20px!important;width:58px!important;height:17px!important;background:var(--lime)!important;clip-path:polygon(0 35%,72% 35%,72% 0,100% 50%,72% 100%,72% 65%,0 65%)!important}
 .brand img,.brand-signature{display:none!important}
 .period-control{position:static!important;margin-top:5px!important}
-.period-buttons button.active{line-height:1.05!important;min-width:88px!important}
+.period-buttons{flex-wrap:wrap!important;gap:7px!important}
+.period-buttons button{border:1px solid rgba(155,201,0,.25)!important}
+.period-buttons button.active{line-height:1.05!important;min-width:118px!important;box-shadow:0 0 0 2px rgba(180,240,0,.12),0 0 18px rgba(155,201,0,.28)!important}
 .month-compare{margin-bottom:10px;border:1px solid rgba(155,201,0,.22);border-radius:9px;padding:8px;background:rgba(155,201,0,.035)}
 .month-compare h3{margin:0 0 5px;color:var(--lime);font-size:10px;text-transform:uppercase;letter-spacing:.8px}
 .month-compare table{font-size:8.5px;min-width:0}

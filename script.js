@@ -53,7 +53,8 @@ const nf = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 2, maximumFra
 const nf1 = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const nf0 = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 });
 const money = value => `R$ ${nf.format(value)}`;
-let p = dashboardData.periods[dashboardData.periodoInicial];
+let selectedPeriodKey = "junho2026";
+let p = dashboardData.periods[dashboardData.periodoInicial] || Object.values(dashboardData.periods)[0];
 
 const icons = ["⌁", "◉", "◌", "◇", "$", "$", "◒", "↗"];
 const PREVIOUS_MONTH = {
@@ -65,6 +66,68 @@ const PREVIOUS_MONTH = {
   costGnl: 1.32,
   economy: 49
 };
+
+function buildScenariosForPeriod(period) {
+  const dieselCost = period.costDiesel || 0;
+  const gnlCost = period.costGnl || 0;
+  const priceGnl = period.priceGnl || 0;
+  const priceDiesel = period.priceDiesel || 0;
+  const economyFromCosts = (newGnlCost, newDieselCost) => newDieselCost ? ((newDieselCost - newGnlCost) / newDieselCost) * 100 : 0;
+  return [
+    { name: "Base", priceGnl, priceDiesel, costGnl: gnlCost, economy: period.economy || economyFromCosts(gnlCost, dieselCost) },
+    { name: "GNL +10%", priceGnl: priceGnl * 1.1, priceDiesel, costGnl: gnlCost * 1.1, economy: economyFromCosts(gnlCost * 1.1, dieselCost) },
+    { name: "Diesel -10%", priceGnl, priceDiesel: priceDiesel * 0.9, costGnl: gnlCost, economy: economyFromCosts(gnlCost, dieselCost * 0.9) },
+    { name: "Stress", priceGnl: priceGnl * 1.1, priceDiesel: priceDiesel * 0.9, costGnl: gnlCost * 1.1, economy: economyFromCosts(gnlCost * 1.1, dieselCost * 0.9) },
+    { name: "Otimista", priceGnl: priceGnl * 0.9, priceDiesel: priceDiesel * 1.1, costGnl: gnlCost * 0.9, economy: economyFromCosts(gnlCost * 0.9, dieselCost * 1.1) }
+  ];
+}
+
+function buildMayPeriod(basePeriod) {
+  const may = {
+    ...basePeriod,
+    label: "Fechamento Maio",
+    range: "01 de maio de 2026 a 31 de maio de 2026",
+    distance: 14290.3,
+    gnlKg: 5005.34,
+    nm3: 6957.42,
+    performance: 2.86,
+    energyPerformance: 2.05,
+    gnlLiters: 13171.95,
+    litersPerKm: 0.92,
+    autonomy: 908.06,
+    theoreticalAutonomy: 908.06,
+    costGnl: 1.32,
+    costDiesel: 2.59,
+    economy: 49,
+    economyRoute: 14290.3 * (2.59 - 1.32),
+    economyPerKm: 2.59 - 1.32,
+    dieselEquivalent: 14290.3 / (basePeriod.dieselPerformance || 2.6),
+    status: "Acima da meta",
+    qtdViagens: 51
+  };
+  may.annualPotential = may.economyPerKm * (may.annualKm || 100000);
+  may.emissionsGnl = may.gnlKg * (may.co2FactorGnl || 2.75);
+  return may;
+}
+
+function configureMonthlyPeriods(base, current) {
+  const june = {
+    ...current,
+    label: "Fechamento Junho",
+    range: "01 de junho de 2026 a 30 de junho de 2026"
+  };
+  const may = buildMayPeriod(june);
+  base.periods = {
+    maio2026: may,
+    junho2026: june
+  };
+  base.periodoInicial = selectedPeriodKey && base.periods[selectedPeriodKey] ? selectedPeriodKey : "junho2026";
+  base.scenariosByPeriod = {
+    maio2026: buildScenariosForPeriod(may),
+    junho2026: buildScenariosForPeriod(june)
+  };
+  return base;
+}
 
 function parseCsv(text) {
   const rows = [];
@@ -156,10 +219,6 @@ function buildDataFromSheet(rows) {
   current.agendamentosSemCte = getNumber("agendamentos_sem_cte") || current.agendamentosSemCte;
   current.status = getText("status_economia") || current.status;
 
-  // Fechamento solicitado: os dados publicados correspondem ao período de junho/2026.
-  current.label = "Fechamento Junho";
-  current.range = "01 de junho de 2026 a 30 de junho de 2026";
-
   const economy = getNumber("economia_percentual");
   if (economy) current.economy = economy <= 1 ? economy * 100 : economy;
   if (!current.gnlLiters && current.gnlKg && current.density) current.gnlLiters = current.gnlKg / current.density;
@@ -174,12 +233,6 @@ function buildDataFromSheet(rows) {
   current.priceGnl = current.priceGnl || 0;
   current.priceDiesel = current.priceDiesel || 0;
 
-  base.scenarios = base.scenarios?.length ? base.scenarios : [
-    { name: "Base", priceGnl: current.priceGnl, priceDiesel: current.priceDiesel, costGnl: current.costGnl, economy: current.economy },
-    { name: "GNL +10%", priceGnl: current.priceGnl * 1.1, priceDiesel: current.priceDiesel, costGnl: current.costGnl * 1.1, economy: current.costDiesel ? ((current.costDiesel - current.costGnl * 1.1) / current.costDiesel) * 100 : 0 },
-    { name: "Diesel -10%", priceGnl: current.priceGnl, priceDiesel: current.priceDiesel * 0.9, costGnl: current.costGnl, economy: current.costDiesel ? ((current.costDiesel * 0.9 - current.costGnl) / (current.costDiesel * 0.9)) * 100 : 0 }
-  ];
-
   base.fonte = {
     ...base.fonte,
     arquivo: "Google Sheets | 06_Saida_GitHub",
@@ -187,7 +240,7 @@ function buildDataFromSheet(rows) {
     qualidade: "Automática",
     observacao: "Dados carregados automaticamente da planilha publicada em CSV"
   };
-  return base;
+  return configureMonthlyPeriods(base, current);
 }
 
 async function loadSheetData() {
@@ -201,7 +254,20 @@ async function loadSheetData() {
 
 function renderSource() {
   document.querySelector("#periodRange").textContent = `▣ ${p.range} | fonte: ${dashboardData.fonte.arquivo}`;
-  document.querySelector("#periodButtons").innerHTML = `<button type="button" class="active">${p.label}</button>`;
+  const entries = Object.entries(dashboardData.periods || {});
+  document.querySelector("#periodButtons").innerHTML = entries.map(([key, period]) => (
+    `<button type="button" class="${key === selectedPeriodKey ? "active" : ""}" data-period="${key}">${period.label}</button>`
+  )).join("");
+  document.querySelectorAll("#periodButtons button").forEach(button => {
+    button.addEventListener("click", () => selectPeriod(button.dataset.period));
+  });
+}
+
+function selectPeriod(key) {
+  if (!dashboardData.periods?.[key]) return;
+  selectedPeriodKey = key;
+  p = dashboardData.periods[key];
+  render();
 }
 
 function applyLayoutFixes() {
@@ -281,7 +347,8 @@ function renderEconomy() {
 }
 
 function renderSensitivityTable() {
-  document.querySelector("#comparisonBody").innerHTML = dashboardData.scenarios.map(s => {
+  const scenarios = dashboardData.scenariosByPeriod?.[selectedPeriodKey] || buildScenariosForPeriod(p);
+  document.querySelector("#comparisonBody").innerHTML = scenarios.map(s => {
     const cls = s.economy >= p.economy ? "up" : s.economy >= p.minimumEconomy * 100 ? "flat" : "down";
     return `<tr><td>${s.name}</td><td>${money(s.priceGnl)}</td><td>${money(s.priceDiesel)}</td><td class="variation ${cls}">${nf1.format(s.economy)}%</td></tr>`;
   }).join("");
@@ -313,8 +380,9 @@ function renderMonthComparison() {
 }
 
 function renderNarrative() {
-  const stress = dashboardData.scenarios.find(s => s.name === "Stress");
-  const optimistic = dashboardData.scenarios.find(s => s.name === "Otimista");
+  const scenarios = dashboardData.scenariosByPeriod?.[selectedPeriodKey] || buildScenariosForPeriod(p);
+  const stress = scenarios.find(s => s.name === "Stress") || scenarios[0];
+  const optimistic = scenarios.find(s => s.name === "Otimista") || scenarios[0];
   const lists = {
     advanceList: [
       `Economia estimada de ${money(p.economyRoute)} na distância analisada.`,
@@ -346,7 +414,8 @@ function renderProjections() {
 }
 
 function renderScenarios() {
-  document.querySelector("#stopGrid").innerHTML = dashboardData.scenarios.map(s => {
+  const scenarios = dashboardData.scenariosByPeriod?.[selectedPeriodKey] || buildScenariosForPeriod(p);
+  document.querySelector("#stopGrid").innerHTML = scenarios.map(s => {
     const status = s.economy >= 45 ? "scenario-good" : s.economy >= 30 ? "scenario-warn" : "scenario-bad";
     return `<article class="stop-card ${status}"><span>${s.name}</span><strong>${nf1.format(s.economy)}%</strong><em>GNL ${money(s.priceGnl)} · Diesel ${money(s.priceDiesel)}</em></article>`;
   }).join("");
@@ -354,7 +423,8 @@ function renderScenarios() {
 
 function render() {
   applyLayoutFixes();
-  p = dashboardData.periods[dashboardData.periodoInicial];
+  selectedPeriodKey = dashboardData.periods?.[selectedPeriodKey] ? selectedPeriodKey : dashboardData.periodoInicial;
+  p = dashboardData.periods[selectedPeriodKey];
   renderSource(); renderKpis(); renderStudy(); renderPerformance(); renderEconomy();
   renderSensitivityTable(); renderMonthComparison(); renderNarrative(); renderProjections(); renderScenarios();
   document.title = `Torre Operacional GNL | ${dashboardData.fonte.geradoEm}`;
@@ -368,6 +438,10 @@ async function init() {
   } catch (error) {
     console.warn("Usando dados locais por falha ao carregar Google Sheets.", error);
     dashboardData = window.GNLDados;
+    if (!dashboardData.periods?.maio2026 || !dashboardData.periods?.junho2026) {
+      const fallbackCurrent = dashboardData.periods[dashboardData.periodoInicial] || Object.values(dashboardData.periods)[0];
+      dashboardData = configureMonthlyPeriods(cloneData(dashboardData), fallbackCurrent);
+    }
     dashboardData.fonte.observacao = "Fallback local: não foi possível carregar o Google Sheets.";
   }
   render();
