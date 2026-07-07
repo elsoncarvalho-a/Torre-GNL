@@ -103,10 +103,10 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
 
 /* Logo oficial Grupo Minas Port */
 .brand.brand-text{
-  background:#020403 url("logo-minas-port-assinatura.png") center center / calc(100% - 28px) auto no-repeat!important;
+  background:#020403 url("https://elsoncarvalho-a.github.io/Torre-GNL/logo-minas-port-assinatura.png") center center / calc(100% - 28px) auto no-repeat!important;
 }
 .brand.brand-text>*{
-  opacity:.01!important;
+  opacity:0!important;
 }
 .brand.brand-text .official-logo{
   display:block!important;
