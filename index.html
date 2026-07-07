@@ -136,5 +136,24 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="dados.js?v=6"></script>
   <script src="script.js?v=6"></script>
+  <script>
+    (function fixPeriodoJunho() {
+      function aplicar() {
+        var periodo = document.querySelector("#periodRange");
+        var botao = document.querySelector("#periodButtons button.active");
+        if (periodo) {
+          periodo.textContent = "▣ Período analisado: 01 de junho de 2026 a 30 de junho de 2026 | fonte: Google Sheets | 06_Saida_GitHub";
+        }
+        if (botao) {
+          botao.textContent = "Fechamento Junho";
+        }
+      }
+      aplicar();
+      window.addEventListener("load", aplicar);
+      setTimeout(aplicar, 500);
+      setTimeout(aplicar, 1500);
+      setTimeout(aplicar, 3000);
+    })();
+  </script>
 </body>
 </html>
