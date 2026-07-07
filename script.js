@@ -1,14 +1,28 @@
-const dashboardData = window.GNLDados;
-const nf = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const nf1 = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-const nf0 = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 });
-const money = value => `R$ ${nf.format(value)}`;
-const p = dashboardData.periods[dashboardData.periodoInicial];
+  if (!current.gnlLiters && current.gnlKg && current.density) current.gnlLiters = current.gnlKg / current.density;
+  if (!current.litersPerKm && current.gnlLiters && current.distance) current.litersPerKm = current.gnlLiters / current.distance;
+  if (!current.dieselEquivalent && current.distance && current.dieselPerformance) current.dieselEquivalent = current.distance / current.dieselPerformance;
 
-const icons = ["⌁", "◉", "◌", "◇", "$", "$", "◒", "↗"];
+  base.fonte = {
+    ...base.fonte,
+    arquivo: "Google Sheets | 06_Saida_GitHub",
+    geradoEm: new Date().toLocaleString("pt-BR"),
+    qualidade: "Automática",
+    observacao: "Dados carregados automaticamente da planilha publicada em CSV"
+  };
+  return base;
+}
+
+async function loadSheetData() {
+  const response = await fetch(`${GOOGLE_SHEETS_CSV_URL}&_=${Date.now()}`, { cache: "no-store" });
+  if (!response.ok) throw new Error(`Falha ao carregar Google Sheets: ${response.status}`);
+  const text = await response.text();
+  const rows = rowsToObjects(parseCsv(text));
+  if (!rows.length || !rows[0].campo_json) throw new Error("CSV sem coluna campo_json");
+  return buildDataFromSheet(rows);
+}
 
 function renderSource() {
-  document.querySelector("#periodRange").textContent = `▣ ${p.range}`;
+  document.querySelector("#periodRange").textContent = `▣ ${p.range} | fonte: ${dashboardData.fonte.arquivo}`;
   document.querySelector("#periodButtons").innerHTML = `<button type="button" class="active">${p.label}</button>`;
 }
 
@@ -110,10 +124,23 @@ function renderScenarios() {
 }
 
 function render() {
+  p = dashboardData.periods[dashboardData.periodoInicial];
   renderSource(); renderKpis(); renderStudy(); renderPerformance(); renderEconomy();
   renderSensitivityTable(); renderNarrative(); renderProjections(); renderScenarios();
   document.title = `Torre Operacional GNL | ${dashboardData.fonte.geradoEm}`;
 }
 
 document.querySelector("#printButton").addEventListener("click", () => window.print());
-render();
+
+async function init() {
+  try {
+    dashboardData = await loadSheetData();
+  } catch (error) {
+    console.warn("Usando dados locais por falha ao carregar Google Sheets.", error);
+    dashboardData = window.GNLDados;
+    dashboardData.fonte.observacao = "Fallback local: não foi possível carregar o Google Sheets.";
+  }
+  render();
+}
+
+init();
