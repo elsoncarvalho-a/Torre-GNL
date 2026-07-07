@@ -1,3 +1,153 @@
+const GOOGLE_SHEETS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSZVFrMhHyHomcj_9lNVaX6LCH-jMhAtubakhXnVG-gbRGvT--XPaKtwIO04fVAAA/pub?gid=1776941332&single=true&output=csv";
+const DEFAULT_DATA = {
+  periodoInicial: "base",
+  fonte: {
+    arquivo: "Google Sheets | 06_Saida_GitHub",
+    geradoEm: "",
+    qualidade: "Automática",
+    observacao: "Dados carregados automaticamente da planilha publicada em CSV"
+  },
+  periods: {
+    base: {
+      label: "Base da planilha",
+      range: "Aguardando dados do Google Sheets",
+      distance: 0,
+      gnlKg: 0,
+      conversion: 1.39,
+      priceGnl: 2.71,
+      priceDiesel: 6.74,
+      dieselPerformance: 2.6,
+      density: 0.38,
+      tankLiters: 711.45,
+      tankKg: 270.35,
+      theoreticalAutonomy: 0,
+      co2FactorGnl: 2.75,
+      annualKm: 100000,
+      minimumEconomy: 0.25,
+      nm3: 0,
+      performance: 0,
+      energyPerformance: 0,
+      gnlLiters: 0,
+      litersPerKm: 0,
+      autonomy: 0,
+      costGnl: 0,
+      costDiesel: 0,
+      economyPerKm: 0,
+      economy: 0,
+      economyRoute: 0,
+      annualPotential: 0,
+      dieselEquivalent: 0,
+      emissionsGnl: 0,
+      status: "Aguardando dados"
+    }
+  },
+  scenarios: [],
+  actions: [
+    { priority: "1", action: "Atualizar base publicada no Google Sheets", owner: "Torre Operacional", result: "Dashboard atualizado automaticamente" },
+    { priority: "2", action: "Validar premissas e metas mensalmente", owner: "Controladoria", result: "Indicadores rastreáveis" },
+    { priority: "3", action: "Conferir publicação CSV da aba 06_Saida_GitHub", owner: "Gestão", result: "Fonte de dados ativa" }
+  ]
+};
+let dashboardData = window.GNLDados || DEFAULT_DATA;
+const nf = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const nf1 = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const nf0 = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 });
+const money = value => `R$ ${nf.format(value)}`;
+let p = dashboardData.periods[dashboardData.periodoInicial];
+
+const icons = ["⌁", "◉", "◌", "◇", "$", "$", "◒", "↗"];
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let value = "";
+  let quoted = false;
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+    const next = text[i + 1];
+    if (char === '"' && quoted && next === '"') {
+      value += '"';
+      i += 1;
+    } else if (char === '"') {
+      quoted = !quoted;
+    } else if (char === "," && !quoted) {
+      row.push(value);
+      value = "";
+    } else if ((char === "\n" || char === "\r") && !quoted) {
+      if (char === "\r" && next === "\n") i += 1;
+      row.push(value);
+      if (row.some(cell => cell.trim() !== "")) rows.push(row);
+      row = [];
+      value = "";
+    } else {
+      value += char;
+    }
+  }
+  row.push(value);
+  if (row.some(cell => cell.trim() !== "")) rows.push(row);
+  return rows;
+}
+
+function normalizeHeader(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function parseNumber(value) {
+  if (typeof value === "number") return value;
+  const raw = String(value ?? "").trim();
+  if (!raw) return 0;
+  const cleaned = raw
+    .replace(/R\$/gi, "")
+    .replace(/kg CO2|km\/Nm3|km\/kg|R\$\/ano|R\$\/km|Nm3|kg|km|qtd|%|texto/gi, "")
+    .trim();
+  if (cleaned.includes(",") && cleaned.includes(".")) {
+    return Number(cleaned.replace(/\./g, "").replace(",", ".")) || 0;
+  }
+  if (cleaned.includes(",")) {
+    return Number(cleaned.replace(",", ".")) || 0;
+  }
+  return Number(cleaned) || 0;
+}
+
+function rowsToObjects(rows) {
+  if (!rows.length) return [];
+  const headerIndex = rows.findIndex(row => row.map(normalizeHeader).includes("campo_json"));
+  if (headerIndex < 0) return [];
+  const headers = rows[headerIndex].map(normalizeHeader);
+  return rows.slice(headerIndex + 1).map(row => Object.fromEntries(headers.map((header, index) => [header, row[index] ?? ""])));
+}
+
+function cloneData(data) {
+  return JSON.parse(JSON.stringify(data));
+}
+
+function buildDataFromSheet(rows) {
+  const byField = Object.fromEntries(rows.map(row => [String(row.campo_json || "").trim(), row]));
+  const getNumber = field => parseNumber(byField[field]?.valor);
+  const getText = field => String(byField[field]?.valor || "").trim();
+  const base = cloneData(window.GNLDados || DEFAULT_DATA);
+  const current = base.periods[base.periodoInicial];
+
+  current.label = byField.distancia_percorrida_km?.periodo || current.label;
+  current.range = `${byField.distancia_percorrida_km?.data_inicio || ""} a ${byField.distancia_percorrida_km?.data_fim || ""}`.trim();
+  current.distance = getNumber("distancia_percorrida_km") || current.distance;
+  current.gnlKg = getNumber("consumo_gnl_kg") || current.gnlKg;
+  current.nm3 = getNumber("consumo_gn_nm3") || current.nm3;
+  current.performance = getNumber("rendimento_gnl_km_kg") || current.performance;
+  current.energyPerformance = getNumber("rendimento_energetico_km_nm3") || current.energyPerformance;
+  current.costGnl = getNumber("custo_gnl_rs_km") || current.costGnl;
+  current.costDiesel = getNumber("custo_diesel_rs_km") || current.costDiesel;
+  current.economyPerKm = getNumber("economia_rs_km") || current.economyPerKm;
+  current.economyRoute = getNumber("economia_periodo_rs") || current.economyRoute;
+  current.annualPotential = getNumber("potencial_anual_rs") || current.annualPotential;
+  current.emissionsGnl = getNumber("emissao_gnl_kg_co2") || current.emissionsGnl;
+  current.qtdViagens = getNumber("qtd_viagens") || current.qtdViagens;
+  current.qtdCte = getNumber("qtd_cte") || current.qtdCte;
+  current.valorTotalCte = getNumber("valor_total_cte_rs") || current.valorTotalCte;
+  current.agendamentosSemCte = getNumber("agendamentos_sem_cte") || current.agendamentosSemCte;
+  current.status = getText("status_economia") || current.status;
+
+  const economy = getNumber("economia_percentual");
   if (economy) current.economy = economy <= 1 ? economy * 100 : economy;
   if (!current.gnlLiters && current.gnlKg && current.density) current.gnlLiters = current.gnlKg / current.density;
   if (!current.litersPerKm && current.gnlLiters && current.distance) current.litersPerKm = current.gnlLiters / current.distance;
