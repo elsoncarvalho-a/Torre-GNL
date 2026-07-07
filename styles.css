@@ -103,10 +103,10 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
 
 /* Logo oficial Grupo Minas Port */
 .brand.brand-text{
-  background:#020403 url("assets/logo-minas-port-assinatura.png") center center / calc(100% - 28px) auto no-repeat!important;
+  background:#020403 url("logo-minas-port-assinatura.png") center center / calc(100% - 28px) auto no-repeat!important;
 }
 .brand.brand-text>*{
-  display:none!important;
+  opacity:.01!important;
 }
 .month-compare{margin-bottom:10px;border:1px solid rgba(155,201,0,.22);border-radius:9px;padding:8px;background:rgba(155,201,0,.035)}
 .month-compare h3{margin:0 0 5px;color:var(--lime);font-size:10px;text-transform:uppercase;letter-spacing:.8px}
