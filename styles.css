@@ -116,6 +116,45 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
   max-height:82px!important;
   object-fit:contain!important;
 }
+
+/* Arte superior com imagem completa — terminal GNL */
+.hero-art{
+  background:#020403!important;
+}
+.hero-art .plant{
+  display:none!important;
+}
+.hero-art .truck-photo{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  transform:none!important;
+  opacity:.86!important;
+  filter:brightness(.78) contrast(1.12) saturate(1.04)!important;
+  mask-image:none!important;
+  -webkit-mask-image:none!important;
+  background:#020403!important;
+}
+@media(min-width:1251px){
+  .hero{
+    min-height:170px!important;
+  }
+  .hero-copy{
+    padding:14px 0 14px 250px!important;
+  }
+  .hero-art{
+    right:18px!important;
+    top:12px!important;
+    bottom:auto!important;
+    width:min(54%,900px)!important;
+    height:150px!important;
+    border:1px solid rgba(155,201,0,.16)!important;
+    border-radius:6px!important;
+  }
+}
 .month-compare{margin-bottom:10px;border:1px solid rgba(155,201,0,.22);border-radius:9px;padding:8px;background:rgba(155,201,0,.035)}
 .month-compare h3{margin:0 0 5px;color:var(--lime);font-size:10px;text-transform:uppercase;letter-spacing:.8px}
 .month-compare table{font-size:8.5px;min-width:0}
