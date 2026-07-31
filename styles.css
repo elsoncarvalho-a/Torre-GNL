@@ -13,6 +13,207 @@
 @media(max-width:820px){.stop-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.stop-grid{grid-template-columns:1fr}}
 
+/* LOGO MINAS PORT — ÚLTIMA PRIORIDADE
+   Esta regra fica no fim do arquivo para sobrepor todos os ajustes antigos. */
+.topbar .brand.brand-text{
+  width:300px!important;
+  height:94px!important;
+  padding:8px 12px!important;
+  background:#000!important;
+  border:1px solid rgba(155,201,0,.55)!important;
+  border-right:2px solid var(--lime)!important;
+  border-radius:4px!important;
+  box-shadow:0 0 18px rgba(155,201,0,.10)!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  pointer-events:auto!important;
+}
+.topbar .brand.brand-text::before,
+.topbar .brand.brand-text::after{content:none!important;display:none!important;background:none!important}
+.topbar .brand.brand-text > :not(.official-logo){display:none!important;visibility:hidden!important;opacity:0!important}
+.topbar .brand.brand-text img.official-logo{
+  content:url("logo-minas-port-assinatura.png");
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+@media(min-width:1251px){
+  .hero-copy{padding-left:326px!important;width:calc(62% - 326px)!important}
+}
+@media(max-width:820px){
+  .topbar .brand.brand-text{width:210px!important;height:72px!important;padding:6px 8px!important}
+}
+
+/* LOGO MINAS PORT — AJUSTE DEFINITIVO 31/07
+   Mantém o logo oficial em alta leitura e neutraliza regras antigas duplicadas. */
+.topbar .brand.brand-text{
+  width:300px!important;
+  height:94px!important;
+  padding:8px 12px!important;
+  background:#000!important;
+  border:1px solid rgba(155,201,0,.55)!important;
+  border-right:2px solid var(--lime)!important;
+  border-radius:4px!important;
+  box-shadow:0 0 18px rgba(155,201,0,.10)!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  pointer-events:auto!important;
+}
+.topbar .brand.brand-text::before,
+.topbar .brand.brand-text::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+}
+.topbar .brand.brand-text > :not(.official-logo){
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+}
+.topbar .brand.brand-text img.official-logo{
+  content:url("logo-minas-port-assinatura.png");
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+@media(min-width:1251px){
+  .hero-copy{
+    padding-left:326px!important;
+    width:calc(62% - 326px)!important;
+  }
+}
+@media(max-width:820px){
+  .topbar .brand.brand-text{
+    width:210px!important;
+    height:72px!important;
+    padding:6px 8px!important;
+  }
+}
+
+/* LOGO OFICIAL — REGRA FINAL ABSOLUTA */
+.brand.brand-text{
+  background:#020403!important;
+  border:1px solid rgba(155,201,0,.55)!important;
+  box-shadow:0 0 22px rgba(155,201,0,.10)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  padding:10px 14px!important;
+}
+.brand.brand-text::before,
+.brand.brand-text::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+}
+.brand.brand-text > :not(.official-logo){
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+}
+.brand.brand-text .official-logo,
+.brand.brand-text img.official-logo{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:220px!important;
+  max-height:78px!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  filter:brightness(1.55) contrast(1.18) drop-shadow(0 0 6px rgba(180,240,0,.12))!important;
+}
+@media(min-width:1251px){
+  .brand.brand-text{
+    width:228px!important;
+    height:90px!important;
+  }
+}
+@media(max-width:820px){
+  .brand.brand-text{
+    width:190px!important;
+    height:72px!important;
+  }
+  .brand.brand-text .official-logo{
+    max-width:178px!important;
+    max-height:62px!important;
+  }
+}
+
+/* LOGO OFICIAL — REGRA FINAL ABSOLUTA */
+.brand.brand-text{
+  background:#020403!important;
+  border:1px solid rgba(155,201,0,.55)!important;
+  box-shadow:0 0 22px rgba(155,201,0,.10)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  padding:10px 14px!important;
+}
+.brand.brand-text::before,
+.brand.brand-text::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+}
+.brand.brand-text > :not(.official-logo){
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+}
+.brand.brand-text .official-logo,
+.brand.brand-text img.official-logo{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:220px!important;
+  max-height:78px!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  filter:brightness(1.55) contrast(1.18) drop-shadow(0 0 6px rgba(180,240,0,.12))!important;
+}
+@media(min-width:1251px){
+  .brand.brand-text{
+    width:228px!important;
+    height:90px!important;
+  }
+}
+@media(max-width:820px){
+  .brand.brand-text{
+    width:190px!important;
+    height:72px!important;
+  }
+  .brand.brand-text .official-logo{
+    max-width:178px!important;
+    max-height:62px!important;
+  }
+}
+
 /* Ajuste definitivo 2026-07-31: caminhão ampliado na faixa superior marcada */
 @media (min-width:1251px){
   .hero{
@@ -182,6 +383,110 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
 @media(max-width:520px){.topbar-actions .live-dot{display:none}.hero h1{font-size:34px}.period-control{align-items:flex-start;flex-direction:column}.kpi-grid{grid-template-columns:1fr}.kpi{min-height:98px}.dashboard-grid{display:block}.dashboard-grid>.panel{margin-bottom:10px}.mini-grid{grid-template-columns:repeat(2,1fr)}.insight-grid{display:block}.insight{margin-bottom:10px}.time-grid,.stop-grid{grid-template-columns:1fr}.section-title{align-items:flex-start;gap:10px}.legend{display:none}.footer-claim{line-height:1.5}}
 @media print{.ambient,.topbar-actions,.period-control,.toast{display:none!important}body{background:#050806!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.shell{width:100%}.hero{min-height:180px}.panel,.kpi{break-inside:avoid}.insight-grid{grid-template-columns:repeat(3,1fr)}.time-grid{grid-template-columns:repeat(7,1fr)}.footer{min-height:70px}}
 
+/* LOGO OFICIAL — REGRA FINAL DE MAIOR PRIORIDADE */
+.brand.brand-text{
+  background:#020403!important;
+  border:1px solid rgba(155,201,0,.55)!important;
+  box-shadow:0 0 22px rgba(155,201,0,.10)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  padding:10px 14px!important;
+}
+.brand.brand-text::before,
+.brand.brand-text::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+}
+.brand.brand-text > :not(.official-logo){
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+}
+.brand.brand-text .official-logo,
+.brand.brand-text img.official-logo{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:220px!important;
+  max-height:78px!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  filter:brightness(1.55) contrast(1.18) drop-shadow(0 0 6px rgba(180,240,0,.12))!important;
+}
+@media(min-width:1251px){
+  .brand.brand-text{
+    width:228px!important;
+    height:90px!important;
+  }
+}
+@media(max-width:820px){
+  .brand.brand-text{
+    width:190px!important;
+    height:72px!important;
+  }
+  .brand.brand-text .official-logo{
+    max-width:178px!important;
+    max-height:62px!important;
+  }
+}
+
+/* Correção final do logo oficial — 31/07/2026
+   Usa o arquivo local em /assets e evita que regras antigas de pseudo-elemento escondam a marca. */
+.brand.brand-text{
+  background:#020403!important;
+  border:1px solid rgba(155,201,0,.55)!important;
+  box-shadow:0 0 22px rgba(155,201,0,.10)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  padding:10px 14px!important;
+}
+.brand.brand-text::before,
+.brand.brand-text::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+}
+.brand.brand-text > :not(.official-logo){
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+}
+.brand.brand-text .official-logo{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:220px!important;
+  max-height:78px!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  filter:brightness(1.55) contrast(1.18) drop-shadow(0 0 6px rgba(180,240,0,.12))!important;
+}
+@media(min-width:1251px){
+  .brand.brand-text{
+    width:228px!important;
+    height:90px!important;
+  }
+}
+@media(max-width:820px){
+  .brand.brand-text{
+    width:190px!important;
+    height:72px!important;
+  }
+  .brand.brand-text .official-logo{
+    max-width:178px!important;
+    max-height:62px!important;
+  }
+}
+
 /* Correção reforçada 2026-07-07 */
 .brand.brand-text{
   background:#020403!important;
@@ -315,3 +620,44 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
 .stop-card.scenario-bad{border-color:#df421d;background:linear-gradient(180deg,rgba(179,40,11,.26),rgba(25,8,4,.9))}
 @media(max-width:820px){.stop-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.stop-grid{grid-template-columns:1fr}}
+
+/* LOGO MINAS PORT — ULTIMA PRIORIDADE REAL 31/07
+   Esta regra foi anexada no final fisico do arquivo para sobrepor todos os ajustes antigos. */
+.topbar .brand.brand-text{
+  width:300px!important;
+  height:94px!important;
+  padding:8px 12px!important;
+  background:#000!important;
+  border:1px solid rgba(155,201,0,.55)!important;
+  border-right:2px solid var(--lime)!important;
+  border-radius:4px!important;
+  box-shadow:0 0 18px rgba(155,201,0,.10)!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  pointer-events:auto!important;
+}
+.topbar .brand.brand-text::before,
+.topbar .brand.brand-text::after{content:none!important;display:none!important;background:none!important}
+.topbar .brand.brand-text > :not(.official-logo){display:none!important;visibility:hidden!important;opacity:0!important}
+.topbar .brand.brand-text img.official-logo{
+  content:url("logo-minas-port-assinatura.png");
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+@media(min-width:1251px){
+  .hero-copy{padding-left:326px!important;width:calc(62% - 326px)!important}
+}
+@media(max-width:820px){
+  .topbar .brand.brand-text{width:210px!important;height:72px!important;padding:6px 8px!important}
+}

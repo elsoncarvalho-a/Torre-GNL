@@ -2,7 +2,7 @@
    Este arquivo é carregado depois do CSS principal para evitar conflito com regras antigas. */
 
 .brand.brand-text{
-  background:#020403!important;
+  background:#000!important;
   border:1px solid rgba(155,201,0,.55)!important;
   border-right:2px solid var(--lime)!important;
   box-shadow:0 0 22px rgba(155,201,0,.10)!important;
@@ -10,7 +10,7 @@
   align-items:center!important;
   justify-content:center!important;
   overflow:hidden!important;
-  padding:6px 10px!important;
+  padding:8px 12px!important;
 }
 
 .brand.brand-text::before,
@@ -33,22 +33,23 @@
   opacity:1!important;
   width:100%!important;
   height:100%!important;
-  max-width:270px!important;
-  max-height:82px!important;
+  max-width:100%!important;
+  max-height:100%!important;
   object-fit:contain!important;
   object-position:center!important;
-  filter:contrast(1.08) saturate(1.08) drop-shadow(0 0 8px rgba(180,240,0,.12))!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
 }
 
 @media(min-width:1251px){
   .brand.brand-text{
-    width:285px!important;
-    height:90px!important;
+    width:300px!important;
+    height:94px!important;
   }
 
   .hero-copy{
-    padding-left:315px!important;
-    width:calc(62% - 315px)!important;
+    padding-left:326px!important;
+    width:calc(62% - 326px)!important;
   }
 }
 
