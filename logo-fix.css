@@ -10,7 +10,7 @@
   align-items:center!important;
   justify-content:center!important;
   overflow:hidden!important;
-  padding:10px 14px!important;
+  padding:6px 10px!important;
 }
 
 .brand.brand-text::before,
@@ -33,17 +33,22 @@
   opacity:1!important;
   width:100%!important;
   height:100%!important;
-  max-width:220px!important;
-  max-height:78px!important;
+  max-width:270px!important;
+  max-height:82px!important;
   object-fit:contain!important;
   object-position:center!important;
-  filter:brightness(1.55) contrast(1.18) drop-shadow(0 0 6px rgba(180,240,0,.12))!important;
+  filter:contrast(1.08) saturate(1.08) drop-shadow(0 0 8px rgba(180,240,0,.12))!important;
 }
 
 @media(min-width:1251px){
   .brand.brand-text{
-    width:228px!important;
+    width:285px!important;
     height:90px!important;
+  }
+
+  .hero-copy{
+    padding-left:315px!important;
+    width:calc(62% - 315px)!important;
   }
 }
 
