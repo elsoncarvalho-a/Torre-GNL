@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#07100b">
   <meta name="description" content="Painel executivo do Projeto Piloto GNL — indicadores operacionais, econômicos e de ciclo.">
   <title>Projeto Piloto GNL | Painel Executivo</title>
-  <link rel="stylesheet" href="styles.css?v=20">
+  <link rel="stylesheet" href="styles.css?v=22">
   <style>
     .brand{
       position:relative!important;
@@ -24,6 +24,41 @@
     }
     .brand>*{
       visibility:hidden!important;
+    }
+    @media (min-width:1251px){
+      .hero{
+        min-height:190px!important;
+      }
+      .hero-copy{
+        padding:14px 0 14px 250px!important;
+        max-width:720px!important;
+      }
+      .hero-art{
+        left:46%!important;
+        right:18px!important;
+        top:8px!important;
+        bottom:auto!important;
+        width:auto!important;
+        height:178px!important;
+        opacity:.95!important;
+        background:#020403!important;
+        border:1px solid rgba(155,201,0,.18)!important;
+        border-radius:8px!important;
+        overflow:hidden!important;
+      }
+      .hero-art .truck-photo{
+        position:absolute!important;
+        inset:0!important;
+        width:100%!important;
+        height:100%!important;
+        object-fit:cover!important;
+        object-position:center 56%!important;
+        transform:none!important;
+        opacity:.78!important;
+        filter:brightness(.62) contrast(1.22) saturate(1.05)!important;
+        mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.65) 10%,#000 24%,#000 100%)!important;
+        -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.65) 10%,#000 24%,#000 100%)!important;
+      }
     }
   </style>
 </head>
