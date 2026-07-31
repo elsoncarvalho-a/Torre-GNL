@@ -34,7 +34,7 @@
 .topbar .brand.brand-text::after{content:none!important;display:none!important;background:none!important}
 .topbar .brand.brand-text > :not(.official-logo){display:none!important;visibility:hidden!important;opacity:0!important}
 .topbar .brand.brand-text img.official-logo{
-  content:url("logo-minas-port-assinatura.png");
+  content:url("logo-minas-port-oficial.jpg");
   display:block!important;
   visibility:visible!important;
   opacity:1!important;
@@ -83,7 +83,7 @@
   opacity:0!important;
 }
 .topbar .brand.brand-text img.official-logo{
-  content:url("logo-minas-port-assinatura.png");
+  content:url("logo-minas-port-oficial.jpg");
   display:block!important;
   visibility:visible!important;
   opacity:1!important;
@@ -513,7 +513,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
 
 /* Logo oficial Grupo Minas Port */
 .brand.brand-text{
-  background:#020403 url("https://elsoncarvalho-a.github.io/Torre-GNL/logo-minas-port-assinatura.png") center center / calc(100% - 28px) auto no-repeat!important;
+  background:#020403 url("https://elsoncarvalho-a.github.io/Torre-GNL/logo-minas-port-oficial.jpg") center center / calc(100% - 28px) auto no-repeat!important;
 }
 .brand.brand-text>*{
   opacity:0!important;
@@ -642,7 +642,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
 .topbar .brand.brand-text::after{content:none!important;display:none!important;background:none!important}
 .topbar .brand.brand-text > :not(.official-logo){display:none!important;visibility:hidden!important;opacity:0!important}
 .topbar .brand.brand-text img.official-logo{
-  content:url("logo-minas-port-assinatura.png");
+  content:url("logo-minas-port-oficial.jpg");
   display:block!important;
   visibility:visible!important;
   opacity:1!important;
