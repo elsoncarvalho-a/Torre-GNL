@@ -1,4 +1,4 @@
-const GOOGLE_SHEETS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSZVFrMhHyHomcj_9lNVaX6LCH-jMhAtubakhXnVG-gbRGvT--XPaKtwIO04fVAAA/pub?gid=1776941332&single=true&output=csv";
+const GOOGLE_SHEETS_CSV_URL = "https://docs.google.com/spreadsheets/d/1SF96YVvS0CdFAGurbbqhk6aifVFZvYne/export?format=csv&gid=1776941332";
 const DEFAULT_DATA = {
   periodoInicial: "base",
   fonte: {
@@ -113,8 +113,8 @@ function buildMayPeriod(basePeriod) {
 function configureMonthlyPeriods(base, current) {
   const june = {
     ...current,
-    label: "Fechamento Junho",
-    range: "01 de junho de 2026 a 30 de junho de 2026"
+    label: current.label || "Fechamento Junho",
+    range: current.range || "01 de junho de 2026 a 30 de junho de 2026"
   };
   const may = buildMayPeriod(june);
   base.periods = {
@@ -126,6 +126,7 @@ function configureMonthlyPeriods(base, current) {
     maio2026: buildScenariosForPeriod(may),
     junho2026: buildScenariosForPeriod(june)
   };
+  base.periodOrder = ["maio2026", "junho2026"];
   return base;
 }
 
@@ -193,15 +194,38 @@ function cloneData(data) {
   return JSON.parse(JSON.stringify(data));
 }
 
-function buildDataFromSheet(rows) {
+function periodKeyFromRow(row, index) {
+  const label = String(row.periodo || row.mes || row.competencia || `periodo_${index + 1}`).trim();
+  return label
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "") || `periodo_${index + 1}`;
+}
+
+function formatDateBr(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return raw;
+  const [, year, month, day] = match;
+  const months = ["janeiro", "fevereiro", "marÃ§o", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+  return `${day} de ${months[Number(month) - 1]} de ${year}`;
+}
+
+function buildPeriodFromRows(basePeriod, rows) {
   const byField = Object.fromEntries(rows.map(row => [String(row.campo_json || "").trim(), row]));
   const getNumber = field => parseNumber(byField[field]?.valor);
   const getText = field => String(byField[field]?.valor || "").trim();
-  const base = cloneData(window.GNLDados || DEFAULT_DATA);
-  const current = base.periods[base.periodoInicial];
+  const current = {
+    ...basePeriod
+  };
 
   current.label = byField.distancia_percorrida_km?.periodo || current.label;
-  current.range = `${byField.distancia_percorrida_km?.data_inicio || ""} a ${byField.distancia_percorrida_km?.data_fim || ""}`.trim();
+  const startDate = byField.distancia_percorrida_km?.data_inicio || rows.find(row => row.data_inicio)?.data_inicio || "";
+  const endDate = byField.distancia_percorrida_km?.data_fim || rows.find(row => row.data_fim)?.data_fim || "";
+  current.range = `${formatDateBr(startDate)} a ${formatDateBr(endDate)}`.trim();
   current.distance = getNumber("distancia_percorrida_km") || current.distance;
   current.gnlKg = getNumber("consumo_gnl_kg") || current.gnlKg;
   current.nm3 = getNumber("consumo_gn_nm3") || current.nm3;
@@ -232,12 +256,51 @@ function buildDataFromSheet(rows) {
   current.dieselEquivalent = current.dieselEquivalent || (current.distance && current.dieselPerformance ? current.distance / current.dieselPerformance : 0);
   current.priceGnl = current.priceGnl || 0;
   current.priceDiesel = current.priceDiesel || 0;
+  return current;
+}
+
+function buildHistoricalDataFromSheet(rows) {
+  const base = cloneData(window.GNLDados || DEFAULT_DATA);
+  const basePeriod = base.periods[base.periodoInicial] || Object.values(base.periods)[0];
+  const grouped = new Map();
+  rows.forEach((row, index) => {
+    const key = periodKeyFromRow(row, index);
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key).push(row);
+  });
+  const entries = [...grouped.entries()].map(([key, periodRows]) => {
+    const period = buildPeriodFromRows(basePeriod, periodRows);
+    const first = periodRows.find(row => row.data_inicio) || {};
+    return { key, period, sortDate: first.data_inicio || "" };
+  }).sort((a, b) => String(a.sortDate).localeCompare(String(b.sortDate)));
+
+  base.periods = Object.fromEntries(entries.map(entry => [entry.key, entry.period]));
+  base.periodOrder = entries.map(entry => entry.key);
+  const latestKey = base.periodOrder[base.periodOrder.length - 1];
+  base.periodoInicial = selectedPeriodKey && base.periods[selectedPeriodKey] ? selectedPeriodKey : latestKey;
+  base.scenariosByPeriod = Object.fromEntries(entries.map(entry => [entry.key, buildScenariosForPeriod(entry.period)]));
 
   base.fonte = {
     ...base.fonte,
     arquivo: "Google Sheets | 06_Saida_GitHub",
     geradoEm: new Date().toLocaleString("pt-BR"),
     qualidade: "Automática",
+    observacao: "Dados carregados automaticamente da planilha publicada em CSV"
+  };
+  return base;
+}
+
+function buildDataFromSheet(rows) {
+  const uniquePeriods = [...new Set(rows.map(row => String(row.periodo || row.mes || row.competencia || "").trim()).filter(Boolean))];
+  if (uniquePeriods.length > 1) return buildHistoricalDataFromSheet(rows);
+
+  const base = cloneData(window.GNLDados || DEFAULT_DATA);
+  const current = buildPeriodFromRows(base.periods[base.periodoInicial], rows);
+  base.fonte = {
+    ...base.fonte,
+    arquivo: "Google Sheets | 06_Saida_GitHub",
+    geradoEm: new Date().toLocaleString("pt-BR"),
+    qualidade: "AutomÃ¡tica",
     observacao: "Dados carregados automaticamente da planilha publicada em CSV"
   };
   return configureMonthlyPeriods(base, current);
@@ -356,16 +419,24 @@ function variation(current, previous) {
   return ((current - previous) / previous) * 100;
 }
 
+function getPreviousSelectedPeriod() {
+  const order = dashboardData.periodOrder || Object.keys(dashboardData.periods || {});
+  const index = order.indexOf(selectedPeriodKey);
+  if (index > 0) return dashboardData.periods[order[index - 1]];
+  return PREVIOUS_MONTH;
+}
+
 function renderMonthComparison() {
   const body = document.querySelector("#monthComparisonBody");
   if (!body) return;
+  const previousPeriod = getPreviousSelectedPeriod();
   const rows = [
-    ["Distância percorrida", PREVIOUS_MONTH.distance, p.distance, "km", nf1],
-    ["Consumo GNL", PREVIOUS_MONTH.gnlKg, p.gnlKg, "kg", nf],
-    ["Consumo Nm³", PREVIOUS_MONTH.nm3, p.nm3, "Nm³", nf],
-    ["Rendimento", PREVIOUS_MONTH.performance, p.performance, "km/kg", nf],
-    ["Custo GNL", PREVIOUS_MONTH.costGnl, p.costGnl, "R$/km", nf],
-    ["Economia operacional", PREVIOUS_MONTH.economy, p.economy, "%", nf1]
+    ["Distância percorrida", previousPeriod.distance, p.distance, "km", nf1],
+    ["Consumo GNL", previousPeriod.gnlKg, p.gnlKg, "kg", nf],
+    ["Consumo Nm³", previousPeriod.nm3, p.nm3, "Nm³", nf],
+    ["Rendimento", previousPeriod.performance, p.performance, "km/kg", nf],
+    ["Custo GNL", previousPeriod.costGnl, p.costGnl, "R$/km", nf],
+    ["Economia operacional", previousPeriod.economy, p.economy, "%", nf1]
   ];
   body.innerHTML = rows.map(([name, prev, current, unit, formatter]) => {
     const delta = variation(current, prev);
