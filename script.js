@@ -210,7 +210,7 @@ function formatDateBr(value) {
   const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) return raw;
   const [, year, month, day] = match;
-  const months = ["janeiro", "fevereiro", "marÃ§o", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+  const months = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
   return `${day} de ${months[Number(month) - 1]} de ${year}`;
 }
 
@@ -307,7 +307,7 @@ function buildDataFromSheet(rows) {
     ...base.fonte,
     arquivo: "Google Sheets | 06_Saida_GitHub",
     geradoEm: new Date().toLocaleString("pt-BR"),
-    qualidade: "AutomÃ¡tica",
+    qualidade: "Automática",
     observacao: "Dados carregados automaticamente da planilha publicada em CSV"
   };
   return configureMonthlyPeriods(base, current);
