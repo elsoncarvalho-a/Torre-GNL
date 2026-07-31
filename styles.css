@@ -24,8 +24,9 @@
 .brand-signature{display:none!important}
 .month-compare{margin-bottom:10px;border:1px solid rgba(155,201,0,.22);border-radius:9px;padding:8px;background:rgba(155,201,0,.035)}
 .month-compare h3{margin:0 0 5px;color:var(--lime);font-size:10px;text-transform:uppercase;letter-spacing:.8px}
-.month-compare table{font-size:8.5px;min-width:0}
+.month-compare table{font-size:8.5px;min-width:0;width:100%;table-layout:fixed}
 .month-compare th,.month-compare td{padding:5px 4px}
+.month-compare th:first-child,.month-compare td:first-child{width:30%}
 
 /* Imagens oficiais fornecidas para o cabeçalho */
 .brand:after{display:none}
@@ -157,8 +158,9 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
 }
 .month-compare{margin-bottom:10px;border:1px solid rgba(155,201,0,.22);border-radius:9px;padding:8px;background:rgba(155,201,0,.035)}
 .month-compare h3{margin:0 0 5px;color:var(--lime);font-size:10px;text-transform:uppercase;letter-spacing:.8px}
-.month-compare table{font-size:8.5px;min-width:0}
+.month-compare table{font-size:8.5px;min-width:0;width:100%;table-layout:fixed}
 .month-compare th,.month-compare td{padding:5px 4px}
+.month-compare th:first-child,.month-compare td:first-child{width:30%}
 
 /* Enquadramento executivo 16:9 — fiel à composição do mockup de referência */
 @media (min-width:1251px){
@@ -181,11 +183,11 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;ba
   .hero-art{right:24px;bottom:-3px;width:min(57%,920px);height:112px;overflow:hidden;opacity:.92}
   .hero-art svg{height:145px;width:100%;transform:translateY(-25px)}
 
-  .kpi-grid{grid-template-columns:repeat(5,minmax(0,1.12fr)) repeat(3,minmax(0,.92fr));gap:7px;padding:7px 0}
-  .kpi{min-height:92px;padding:12px 13px;border-color:#587500;background:rgba(3,7,4,.96)}
+  .kpi-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:7px;padding:7px 0;align-items:stretch}
+  .kpi{min-height:92px;padding:12px 13px;border-color:#587500;background:rgba(3,7,4,.96);display:flex;flex-direction:column;justify-content:center}
   .kpi-label{display:block;text-align:center;font-size:9px}.kpi-value{text-align:center;font-size:28px;margin-top:7px}.kpi-unit{display:block;margin:1px 0 0;font-size:10px}
   .kpi-note{text-align:center;margin-top:3px;font-size:8px}.kpi-icon{left:10px;right:auto;top:31px;font-size:24px}
-  .kpi:nth-child(n+6){min-height:69px;align-self:end}.kpi:nth-child(n+6) .kpi-value{font-size:20px;margin-top:5px}.kpi:nth-child(n+6) .kpi-icon{font-size:19px;top:31px}
+  .kpi:nth-child(n+6){min-height:92px;align-self:stretch}.kpi:nth-child(n+6) .kpi-value{font-size:28px;margin-top:7px}.kpi:nth-child(n+6) .kpi-icon{font-size:24px;top:31px}
 
   .dashboard-grid{gap:7px;grid-template-columns:1.05fr 1.82fr 1.03fr 1.45fr}
   .dashboard-grid>.panel{min-height:235px;height:235px;padding:10px;overflow:hidden;border-color:#587500}

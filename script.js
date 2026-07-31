@@ -53,7 +53,7 @@ const nf = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 2, maximumFra
 const nf1 = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const nf0 = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 });
 const money = value => `R$ ${nf.format(value)}`;
-let selectedPeriodKey = "junho2026";
+let selectedPeriodKey = null;
 let p = dashboardData.periods[dashboardData.periodoInicial] || Object.values(dashboardData.periods)[0];
 
 const icons = ["⌁", "◉", "◌", "◇", "$", "$", "◒", "↗"];
@@ -268,11 +268,18 @@ function buildHistoricalDataFromSheet(rows) {
     if (!grouped.has(key)) grouped.set(key, []);
     grouped.get(key).push(row);
   });
-  const entries = [...grouped.entries()].map(([key, periodRows]) => {
+  let entries = [...grouped.entries()].map(([key, periodRows]) => {
     const period = buildPeriodFromRows(basePeriod, periodRows);
     const first = periodRows.find(row => row.data_inicio) || {};
     return { key, period, sortDate: first.data_inicio || "" };
   }).sort((a, b) => String(a.sortDate).localeCompare(String(b.sortDate)));
+
+  const hasMay = entries.some(entry => /maio/i.test(`${entry.key} ${entry.period?.label || ""}`));
+  const juneEntry = entries.find(entry => /junho/i.test(`${entry.key} ${entry.period?.label || ""}`));
+  if (!hasMay && juneEntry) {
+    entries.push({ key: "maio2026", period: buildMayPeriod(juneEntry.period), sortDate: "2026-05-01" });
+    entries = entries.sort((a, b) => String(a.sortDate).localeCompare(String(b.sortDate)));
+  }
 
   base.periods = Object.fromEntries(entries.map(entry => [entry.key, entry.period]));
   base.periodOrder = entries.map(entry => entry.key);
@@ -346,9 +353,9 @@ function applyLayoutFixes() {
   if (comparePanel && !document.querySelector("#monthComparisonBody")) {
     comparePanel.insertAdjacentHTML("beforebegin", `
       <div class="month-compare">
-        <h3>Comparativo mês anterior</h3>
+        <h3>Comparativo mensal</h3>
         <table>
-          <thead><tr><th>Indicador</th><th>Maio/2026</th><th>Junho/2026</th><th>Variação</th></tr></thead>
+          <thead><tr id="monthComparisonHead"></tr></thead>
           <tbody id="monthComparisonBody"></tbody>
         </table>
       </div>
@@ -426,24 +433,51 @@ function getPreviousSelectedPeriod() {
   return PREVIOUS_MONTH;
 }
 
+function compactPeriodLabel(period) {
+  const label = String(period?.label || "").replace(/^Fechamento\s+/i, "").trim();
+  if (label) return label;
+  const match = String(period?.range || "").match(/de\s+([a-zç]+)\s+de\s+(\d{4})/i);
+  return match ? `${match[1]}/${match[2]}` : "Mês";
+}
+
+function formatComparisonValue(value, unit, formatter) {
+  const safeValue = Number.isFinite(Number(value)) ? Number(value) : 0;
+  if (unit.startsWith("R$")) return `R$ ${formatter.format(safeValue)}/km`;
+  if (unit === "%") return `${formatter.format(safeValue)}%`;
+  return `${formatter.format(safeValue)} ${unit}`;
+}
+
 function renderMonthComparison() {
+  const head = document.querySelector("#monthComparisonHead");
   const body = document.querySelector("#monthComparisonBody");
   if (!body) return;
-  const previousPeriod = getPreviousSelectedPeriod();
+  const order = dashboardData.periodOrder || Object.keys(dashboardData.periods || {});
+  const periods = order.map(key => dashboardData.periods?.[key]).filter(Boolean);
+  const visiblePeriods = periods.length ? periods : [getPreviousSelectedPeriod(), p].filter(Boolean);
+  const previousPeriod = visiblePeriods[visiblePeriods.length - 2] || visiblePeriods[0] || p;
+  const currentPeriod = visiblePeriods[visiblePeriods.length - 1] || p;
   const rows = [
-    ["Distância percorrida", previousPeriod.distance, p.distance, "km", nf1],
-    ["Consumo GNL", previousPeriod.gnlKg, p.gnlKg, "kg", nf],
-    ["Consumo Nm³", previousPeriod.nm3, p.nm3, "Nm³", nf],
-    ["Rendimento", previousPeriod.performance, p.performance, "km/kg", nf],
-    ["Custo GNL", previousPeriod.costGnl, p.costGnl, "R$/km", nf],
-    ["Economia operacional", previousPeriod.economy, p.economy, "%", nf1]
+    ["Distância percorrida", "distance", "km", nf1],
+    ["Consumo GNL", "gnlKg", "kg", nf],
+    ["Consumo Nm³", "nm3", "Nm³", nf],
+    ["Rendimento", "performance", "km/kg", nf],
+    ["Custo GNL", "costGnl", "R$/km", nf],
+    ["Economia operacional", "economy", "%", nf1]
   ];
-  body.innerHTML = rows.map(([name, prev, current, unit, formatter]) => {
-    const delta = variation(current, prev);
+  if (head) {
+    head.innerHTML = [
+      "<th>Indicador</th>",
+      ...visiblePeriods.map(period => `<th>${compactPeriodLabel(period)}</th>`),
+      "<th>Variação</th>"
+    ].join("");
+  }
+  body.innerHTML = rows.map(([name, field, unit, formatter]) => {
+    const previous = previousPeriod?.[field] || 0;
+    const current = currentPeriod?.[field] || 0;
+    const delta = variation(current, previous);
     const cls = Math.abs(delta) < 0.05 ? "flat" : delta > 0 ? "up" : "down";
-    const prefix = unit.startsWith("R$") ? "R$ " : "";
-    const suffix = unit.startsWith("R$") ? "/km" : unit === "%" ? "%" : ` ${unit}`;
-    return `<tr><td>${name}</td><td>${prefix}${formatter.format(prev)}${suffix}</td><td>${prefix}${formatter.format(current)}${suffix}</td><td class="variation ${cls}">${delta >= 0 ? "+" : ""}${nf1.format(delta)}%</td></tr>`;
+    const periodCells = visiblePeriods.map(period => `<td>${formatComparisonValue(period?.[field], unit, formatter)}</td>`).join("");
+    return `<tr><td>${name}</td>${periodCells}<td class="variation ${cls}">${delta >= 0 ? "+" : ""}${nf1.format(delta)}%</td></tr>`;
   }).join("");
 }
 

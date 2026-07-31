@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#07100b">
   <meta name="description" content="Painel executivo do Projeto Piloto GNL — indicadores operacionais, econômicos e de ciclo.">
   <title>Projeto Piloto GNL | Painel Executivo</title>
-  <link rel="stylesheet" href="styles.css?v=18">
+  <link rel="stylesheet" href="styles.css?v=20">
   <style>
     .brand{
       position:relative!important;
@@ -115,9 +115,9 @@
       <article class="panel compare-panel">
         <div class="panel-heading"><span class="panel-number">04</span><div><p>Risco</p><h2>Sensibilidade de cenários</h2></div></div>
         <div class="month-compare">
-          <h3>Comparativo mês anterior</h3>
+          <h3>Comparativo mensal</h3>
           <table>
-            <thead><tr><th>Indicador</th><th>Maio/2026</th><th>Atual</th><th>Variação</th></tr></thead>
+            <thead><tr id="monthComparisonHead"></tr></thead>
             <tbody id="monthComparisonBody"></tbody>
           </table>
         </div>
@@ -154,6 +154,6 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="dados.js?v=6"></script>
-  <script src="script.js?v=32"></script>
+  <script src="script.js?v=34"></script>
 </body>
 </html>
