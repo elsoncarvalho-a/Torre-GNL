@@ -7,7 +7,7 @@
   <meta name="description" content="Painel executivo do Projeto Piloto GNL — indicadores operacionais, econômicos e de ciclo.">
   <title>Projeto Piloto GNL | Painel Executivo</title>
   <link rel="stylesheet" href="styles.css?v=41">
-  <link rel="stylesheet" href="petrorec.css?v=1">
+  <link rel="stylesheet" href="petrorec.css?v=2">
   <style>
     .brand{
       position:relative!important;
@@ -395,7 +395,7 @@
         <div class="pr-heading-copy">
           <p class="pr-eyebrow">CICLO POR VIAGEM</p>
           <h2 id="prTitle">Consumo médio e custo de cada operação</h2>
-          <p>Indicadores compilados diretamente da planilha operacional original.</p>
+          <p>Indicadores calculados exclusivamente da planilha original — aba 06_Saida_GitHub.</p>
         </div>
         <div class="pr-source-box">
           <span class="pr-status" id="prStatus" data-state="loading">Conectando à planilha original…</span>
@@ -406,33 +406,28 @@
         </div>
       </header>
 
-      <div class="pr-filterbar" aria-label="Filtros do ciclo por viagem">
-        <label><span>Competência</span><select id="prMonth"><option value="">Todo o período</option></select></label>
-        <label><span>Data inicial</span><input type="date" id="prDateStart"></label>
-        <label><span>Data final</span><input type="date" id="prDateEnd"></label>
-        <label><span>Cavalo</span><select id="prTruck"><option value="">Todos</option></select></label>
-        <label><span>Reboque</span><select id="prTrailer"><option value="">Todos</option></select></label>
-        <label><span>Motorista</span><select id="prDriver"><option value="">Todos</option></select></label>
-        <button class="pr-clear" type="button" id="prClearFilters">Limpar filtros</button>
+      <div class="pr-filterbar pr-filterbar-period" aria-label="Seleção do fechamento">
+        <label><span>Competência</span><select id="prMonth"><option value="">Último fechamento</option></select></label>
+        <button class="pr-clear" type="button" id="prClearFilters">Último fechamento</button>
       </div>
 
-      <div class="pr-context" id="prContext">Carregando viagens da planilha original…</div>
+      <div class="pr-context" id="prContext">Carregando fechamentos da planilha original…</div>
 
       <article class="panel pr-panel pr-trip-panel">
         <div class="pr-panel-title">
-          <div><p>DETALHAMENTO OPERACIONAL</p><h3>Viagens e médias do recorte</h3></div>
-          <span>Recorte filtrado</span>
+          <div><p>MÉDIAS POR FECHAMENTO</p><h3>Memória de cálculo do ciclo</h3></div>
+          <span>Base mensal original</span>
         </div>
         <div class="pr-trip-overview" id="prTripSummary" aria-label="Resumo do ciclo por viagem"></div>
         <div class="pr-table-wrap pr-trip-table">
           <table>
             <thead>
-              <tr><th>Data</th><th>Motorista</th><th>Conjunto</th><th>Volume</th><th>Consumo GNL</th><th>Rendimento</th><th>Custo do ciclo</th><th>Custo/km</th><th>CT-e líquido</th></tr>
+              <tr><th>Período</th><th>Viagens</th><th>Distância total</th><th>km/viagem</th><th>GNL total</th><th>kg/viagem</th><th>Rendimento</th><th>Custo GNL/ciclo</th><th>CT-e médio</th></tr>
             </thead>
             <tbody id="prTripBody"></tbody>
           </table>
         </div>
-        <p class="pr-data-note">Valores compilados diretamente da planilha original a cada atualização. Ciclo estimado em 272 km (136 km por trecho). O custo considera o valor GNL da viagem; na ausência desse campo, utiliza quantidade abastecida × preço por kg.</p>
+        <p class="pr-data-note">Fonte exclusiva: planilha original, aba 06_Saida_GitHub. A aba 02_Base_Viagens contém somente uma linha de exemplo; por isso, consumo e custo por viagem são médias calculadas do fechamento mensal (total ÷ viagens), sem utilizar o painel PetroRec. O detalhamento individual será habilitado quando a base de viagens tiver registros reais.</p>
       </article>
     </section>
 
@@ -446,6 +441,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="dados.js?v=6"></script>
   <script src="script.js?v=34"></script>
-  <script src="petrorec.js?v=4"></script>
+  <script src="petrorec.js?v=5"></script>
 </body>
 </html>
