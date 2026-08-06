@@ -275,10 +275,12 @@
       const minDate = allRows[0].data;
       const maxDate = allRows[allRows.length - 1].data;
       const start = $("prDateStart"), end = $("prDateEnd");
+      const previousMax = end.max;
+      const wasAtLatestDate = !end.value || !previousMax || end.value === previousMax;
       start.min = end.min = minDate;
       start.max = end.max = maxDate;
       if (!start.value) start.value = minDate;
-      if (!end.value) end.value = maxDate;
+      if (wasAtLatestDate || end.value > maxDate) end.value = maxDate;
     }
   }
 
@@ -449,8 +451,12 @@
 
   function renderDre(rows) {
     const operational = Object.fromEntries(groupByMonth(rows).map(month => [month.key, month]));
-    const columns = ["2026-05", "2026-06", "2026-07"];
-    $("prDreHead").innerHTML = `<tr><th>Indicador</th>${columns.map(key => `<th>${key === "2026-07" ? "Jul/26 (op.)" : DRE[key].label}</th>`).join("")}</tr>`;
+    const firstDreMonth = Object.keys(DRE).sort()[0];
+    const columns = [...new Set([...Object.keys(DRE), ...Object.keys(operational)])]
+      .filter(key => !firstDreMonth || key >= firstDreMonth)
+      .sort();
+    const dreColumnLabel = key => DRE[key]?.label || `${monthLabel(key)} (op.)`;
+    $("prDreHead").innerHTML = `<tr><th>Indicador</th>${columns.map(key => `<th>${escapeHtml(dreColumnLabel(key))}</th>`).join("")}</tr>`;
     const valueFor = (key, metric) => {
       if (DRE[key]) return DRE[key][metric];
       const month = operational[key];
