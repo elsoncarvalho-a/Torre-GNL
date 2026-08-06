@@ -390,15 +390,15 @@
       <div class="stop-grid" id="stopGrid"></div>
     </section>
 
-    <section class="pr-module" id="petrorec" aria-labelledby="prTitle">
+    <section class="pr-module pr-cycle-only" id="petrorec" aria-labelledby="prTitle">
       <header class="pr-header">
         <div class="pr-heading-copy">
-          <p class="pr-eyebrow">INTEGRAÇÃO PETRORECONCAVO</p>
-          <h2 id="prTitle">Operação PetroRec</h2>
-          <p>Frete, CT-e, volume, combustível e produtividade em uma única leitura executiva.</p>
+          <p class="pr-eyebrow">CICLO POR VIAGEM</p>
+          <h2 id="prTitle">Consumo médio e custo de cada operação</h2>
+          <p>Indicadores compilados diretamente da planilha operacional original.</p>
         </div>
         <div class="pr-source-box">
-          <span class="pr-status" id="prStatus" data-state="loading">Conectando à planilha…</span>
+          <span class="pr-status" id="prStatus" data-state="loading">Conectando à planilha original…</span>
           <small id="prUpdatedAt">Aguardando primeira carga</small>
           <div class="pr-source-actions">
             <button type="button" id="prRefresh">Atualizar agora</button>
@@ -406,7 +406,7 @@
         </div>
       </header>
 
-      <div class="pr-filterbar" aria-label="Filtros PetroRec">
+      <div class="pr-filterbar" aria-label="Filtros do ciclo por viagem">
         <label><span>Competência</span><select id="prMonth"><option value="">Todo o período</option></select></label>
         <label><span>Data inicial</span><input type="date" id="prDateStart"></label>
         <label><span>Data final</span><input type="date" id="prDateEnd"></label>
@@ -416,27 +416,11 @@
         <button class="pr-clear" type="button" id="prClearFilters">Limpar filtros</button>
       </div>
 
-      <div class="pr-context" id="prContext">Carregando base operacional…</div>
-      <div class="pr-kpi-grid" id="prKpis" aria-label="Indicadores PetroRec"></div>
-
-      <div class="pr-grid pr-grid-main">
-        <article class="panel pr-panel">
-          <div class="pr-panel-title"><div><p>COMPARAÇÃO MENSAL</p><h3>Tração da operação</h3></div><span>Base viva</span></div>
-          <div class="pr-month-chart" id="prMonthChart"></div>
-          <div class="pr-table-wrap pr-compact-table"><table><thead id="prMonthHead"></thead><tbody id="prMonthBody"></tbody></table></div>
-        </article>
-
-        <article class="panel pr-panel">
-          <div class="pr-panel-title"><div><p>EFICIÊNCIA ENERGÉTICA</p><h3>GNL versus diesel estimado</h3></div><span>Por viagem</span></div>
-          <div class="pr-fuel-cards" id="prFuelCards"></div>
-          <div class="pr-fuel-bars" id="prFuelBars"></div>
-          <p class="pr-assumption">Premissa diesel: 136 km por trecho, 1,9 km/l carregado, 3,0 km/l no retorno e R$ 6,00/l.</p>
-        </article>
-      </div>
+      <div class="pr-context" id="prContext">Carregando viagens da planilha original…</div>
 
       <article class="panel pr-panel pr-trip-panel">
         <div class="pr-panel-title">
-          <div><p>CICLO POR VIAGEM</p><h3>Consumo médio e custo de cada operação</h3></div>
+          <div><p>DETALHAMENTO OPERACIONAL</p><h3>Viagens e médias do recorte</h3></div>
           <span>Recorte filtrado</span>
         </div>
         <div class="pr-trip-overview" id="prTripSummary" aria-label="Resumo do ciclo por viagem"></div>
@@ -448,30 +432,8 @@
             <tbody id="prTripBody"></tbody>
           </table>
         </div>
-        <p class="pr-data-note">Valores compilados diretamente da planilha original PetroRec a cada atualização. Ciclo estimado em 272 km (136 km por trecho). O custo considera o valor GNL da viagem; na ausência desse campo, utiliza quantidade abastecida × preço por kg.</p>
+        <p class="pr-data-note">Valores compilados diretamente da planilha original a cada atualização. Ciclo estimado em 272 km (136 km por trecho). O custo considera o valor GNL da viagem; na ausência desse campo, utiliza quantidade abastecida × preço por kg.</p>
       </article>
-
-      <article class="panel pr-panel pr-dre-panel">
-        <div class="pr-panel-title"><div><p>DRE PETROREC</p><h3>Resultado gerencial e fechamento</h3></div><span class="pr-manual-badge">Maio/Junho: fechamento consolidado</span></div>
-        <div class="pr-table-wrap"><table><thead id="prDreHead"></thead><tbody id="prDreBody"></tbody></table></div>
-        <p class="pr-data-note">Competências sem DRE publicada permanecem operacionais. Valores financeiros fechados de maio e junho compõem a base gerencial consolidada.</p>
-      </article>
-
-      <div class="pr-grid pr-grid-ranking">
-        <article class="panel pr-panel">
-          <div class="pr-panel-title"><div><p>PRODUTIVIDADE</p><h3>Por motorista</h3></div><span>Ranking</span></div>
-          <div class="pr-ranking" id="prDriverRanking"></div>
-        </article>
-        <article class="panel pr-panel">
-          <div class="pr-panel-title"><div><p>UTILIZAÇÃO</p><h3>Por frota</h3></div><span>Cavalo + reboque</span></div>
-          <div class="pr-ranking" id="prFleetRanking"></div>
-        </article>
-      </div>
-
-      <details class="panel pr-panel pr-details">
-        <summary><span><b>Base operacional detalhada</b><small id="prDetailCount">0 registros</small></span><em>Expandir</em></summary>
-        <div class="pr-table-wrap"><table><thead><tr><th>Data</th><th>Motorista</th><th>Cavalo</th><th>Reboque</th><th>CT-e líq.</th><th>Frete</th><th>Volume m³</th><th>GNL kg</th><th>Custo GNL</th><th>R$/km</th></tr></thead><tbody id="prDetailBody"></tbody></table></div>
-      </details>
     </section>
 
   </main>
