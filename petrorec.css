@@ -80,6 +80,11 @@
   border-radius:14px;
   background:rgba(6,11,8,.8);
 }
+.pr-filterbar.pr-filterbar-period{
+  grid-template-columns:minmax(240px,360px) auto;
+  justify-content:start;
+}
+.pr-filterbar.pr-filterbar-period .pr-clear{min-width:150px}
 .pr-filterbar label{display:grid;gap:6px;min-width:0}
 .pr-filterbar label span{color:#79857e;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}
 .pr-filterbar select,.pr-filterbar input{
@@ -162,7 +167,7 @@
 .pr-trip-metric.featured strong{color:#d9ef7d}
 .pr-trip-metric em{display:block;margin-top:7px;color:#6e7b72;font-size:9px;font-style:normal}
 .pr-trip-table{max-height:390px;margin-top:14px;border-top:1px solid rgba(255,255,255,.06)}
-.pr-trip-table table{min-width:1120px}
+.pr-trip-table table{min-width:980px}
 .pr-trip-table thead{position:sticky;top:0;z-index:1;background:#0a110c}
 .pr-dre-panel{margin-bottom:10px}
 .pr-ranking{display:grid;gap:8px}
