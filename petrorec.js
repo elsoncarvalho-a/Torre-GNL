@@ -207,7 +207,7 @@
       populateFilters();
       render();
       setStatus(
-        "Planilha original PetroRec sincronizada",
+        "Planilha original sincronizada",
         "ok",
         `${allRows.length} registros · ${lastUpdatedAt.toLocaleString("pt-BR")}`
       );
@@ -581,28 +581,13 @@
 
   function render() {
     const rows = filteredRows();
-    $("prContext").textContent = `${periodText(rows)} · ${INT.format(rows.length)} CT-e · ${new Set(rows.map(row => row.cavalo).filter(Boolean)).size} cavalos · filtros aplicados ao recorte operacional`;
-    renderKpis(rows);
-    renderMonthly(comparisonRows());
-    renderFuel(rows);
+    $("prContext").textContent = `${periodText(rows)} · ${INT.format(rows.length)} viagens · ${new Set(rows.map(row => row.cavalo).filter(Boolean)).size} cavalos · filtros aplicados ao recorte`;
     renderTripCycle(rows);
-    renderDre(comparisonRows());
-    renderRanking("prDriverRanking", groupRows(rows, "motorista"), "driver");
-    renderRanking("prFleetRanking", groupRows(rows, "cavalo"), "fleet");
-    renderDetails(rows);
   }
 
   function showEmptyState() {
-    $("prContext").textContent = "A integração está configurada, mas a fonte não respondeu e ainda não existe cache local.";
-    $("prKpis").innerHTML = '<div class="pr-empty">Sem dados PetroRec disponíveis.</div>';
-    ["prMonthChart", "prFuelCards", "prFuelBars", "prDriverRanking", "prFleetRanking"].forEach(id => {
-      $(id).innerHTML = '<div class="pr-empty">Aguardando a planilha.</div>';
-    });
-    $("prMonthHead").innerHTML = "";
-    $("prMonthBody").innerHTML = "";
+    $("prContext").textContent = "A planilha original não respondeu. Nenhum dado alternativo foi exibido.";
     renderTripCycle([]);
-    renderDre([]);
-    renderDetails([]);
   }
 
   function clearFilters() {
