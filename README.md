@@ -32,3 +32,5 @@ Atualizacao automatica via Google Sheets
 O dashboard agora tenta carregar automaticamente a aba publicada no Google Sheets em formato CSV:
 https://docs.google.com/spreadsheets/d/e/2PACX-1vSZVFrMhHyHomcj_9lNVaX6LCH-jMhAtubakhXnVG-gbRGvT--XPaKtwIO04fVAAA/pub?gid=1776941332&single=true&output=csv
 Quando a planilha publicada for atualizada, basta recarregar o dashboard para buscar os novos dados.
+
+<!-- Pages redeploy 2026-08-06 -->
