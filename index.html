@@ -402,7 +402,6 @@
           <small id="prUpdatedAt">Aguardando primeira carga</small>
           <div class="pr-source-actions">
             <button type="button" id="prRefresh">Atualizar agora</button>
-            <a href="https://paulogrupominasport.github.io/dashboard-PetroRec/" target="_blank" rel="noopener">Abrir origem</a>
           </div>
         </div>
       </header>
@@ -435,10 +434,27 @@
         </article>
       </div>
 
+      <article class="panel pr-panel pr-trip-panel">
+        <div class="pr-panel-title">
+          <div><p>CICLO POR VIAGEM</p><h3>Consumo médio e custo de cada operação</h3></div>
+          <span>Recorte filtrado</span>
+        </div>
+        <div class="pr-trip-overview" id="prTripSummary" aria-label="Resumo do ciclo por viagem"></div>
+        <div class="pr-table-wrap pr-trip-table">
+          <table>
+            <thead>
+              <tr><th>Data</th><th>Motorista</th><th>Conjunto</th><th>Volume</th><th>Consumo GNL</th><th>Rendimento</th><th>Custo do ciclo</th><th>Custo/km</th><th>CT-e líquido</th></tr>
+            </thead>
+            <tbody id="prTripBody"></tbody>
+          </table>
+        </div>
+        <p class="pr-data-note">Ciclo estimado em 272 km (136 km por trecho). O custo considera o valor GNL da viagem; na ausência desse campo, utiliza quantidade abastecida × preço por kg.</p>
+      </article>
+
       <article class="panel pr-panel pr-dre-panel">
-        <div class="pr-panel-title"><div><p>DRE PETROREC</p><h3>Resultado gerencial e fechamento</h3></div><span class="pr-manual-badge">Maio/Junho: referência do painel de origem</span></div>
+        <div class="pr-panel-title"><div><p>DRE PETROREC</p><h3>Resultado gerencial e fechamento</h3></div><span class="pr-manual-badge">Maio/Junho: fechamento consolidado</span></div>
         <div class="pr-table-wrap"><table><thead id="prDreHead"></thead><tbody id="prDreBody"></tbody></table></div>
-        <p class="pr-data-note">Competências sem DRE publicada permanecem operacionais. Valores financeiros fechados de maio e junho são referência gerencial estática do painel PetroRec.</p>
+        <p class="pr-data-note">Competências sem DRE publicada permanecem operacionais. Valores financeiros fechados de maio e junho compõem a base gerencial consolidada.</p>
       </article>
 
       <div class="pr-grid pr-grid-ranking">
@@ -467,6 +483,6 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="dados.js?v=6"></script>
   <script src="script.js?v=34"></script>
-  <script src="petrorec.js?v=2"></script>
+  <script src="petrorec.js?v=3"></script>
 </body>
 </html>

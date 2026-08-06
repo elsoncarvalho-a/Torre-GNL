@@ -449,6 +449,65 @@
       <div class="pr-fuel-row diesel"><span>Diesel</span><div class="pr-fuel-track"><i style="--w:${dieselPerTrip / max * 100}%"></i></div><b>${BRL.format(dieselPerTrip)}</b></div>`;
   }
 
+  function tripCycleCost(row) {
+    if ((row.gnlViagem || 0) > 0) return row.gnlViagem;
+    if ((row.gnlAbast || 0) > 0 && (row.gnlKg || 0) > 0) return row.gnlAbast * row.gnlKg;
+    return null;
+  }
+
+  function renderTripCycle(rows) {
+    const cycleKm = CONFIG.diesel.kmEachWay * 2;
+    const fuelRows = rows.filter(row => (row.gnlAbast || 0) > 0 || tripCycleCost(row) !== null);
+    const totalKg = sum(fuelRows, "gnlAbast");
+    const totalCost = fuelRows.reduce((total, row) => total + (tripCycleCost(row) || 0), 0);
+    const avgKg = fuelRows.length ? totalKg / fuelRows.length : 0;
+    const avgYield = totalKg ? cycleKm * fuelRows.length / totalKg : 0;
+    const avgCost = fuelRows.length ? totalCost / fuelRows.length : 0;
+    const avgCostKm = cycleKm ? avgCost / cycleKm : 0;
+    const avgVolume = rows.length ? sum(rows, "petroleo") / rows.length : 0;
+    const avgNet = rows.length ? sum(rows, "cteLiq") / rows.length : 0;
+
+    const metrics = [
+      ["Viagens analisadas", INT.format(rows.length), `${INT.format(fuelRows.length)} com dados de GNL`, ""],
+      ["Ciclo estimado", `${INT.format(cycleKm)} km`, `${INT.format(CONFIG.diesel.kmEachWay)} km por trecho`, ""],
+      ["Consumo médio", `${NUM1.format(avgKg)} kg`, `${NUM.format(avgYield)} km/kg`, "blue"],
+      ["Custo médio do ciclo", BRL.format(avgCost), `${BRL.format(avgCostKm)} por km`, "featured"],
+      ["Volume médio", `${NUM3.format(avgVolume)} m³`, "por viagem", "blue"],
+      ["CT-e líquido médio", BRL.format(avgNet), `${BRL.format(Math.max(0, avgNet - avgCost))} após GNL`, ""]
+    ];
+
+    $("prTripSummary").innerHTML = metrics.map(([label, value, note, theme]) => `
+      <div class="pr-trip-metric ${theme}">
+        <span>${escapeHtml(label)}</span>
+        <strong>${escapeHtml(value)}</strong>
+        <em>${escapeHtml(note)}</em>
+      </div>`).join("");
+
+    if (!rows.length) {
+      $("prTripBody").innerHTML = '<tr><td colspan="9" class="pr-empty">Sem viagens no recorte selecionado.</td></tr>';
+      return;
+    }
+
+    $("prTripBody").innerHTML = [...rows].sort((a, b) => b.data.localeCompare(a.data)).map(row => {
+      const cost = tripCycleCost(row);
+      const consumption = row.gnlAbast || null;
+      const yieldKmKg = consumption ? cycleKm / consumption : null;
+      const costKm = cost !== null ? cost / cycleKm : null;
+      const set = [row.cavalo, row.reboque].filter(Boolean).join(" + ") || "—";
+      return `<tr>
+        <td>${dateBr(row.data)}</td>
+        <td>${escapeHtml(row.motorista || "—")}</td>
+        <td>${escapeHtml(set)}</td>
+        <td>${row.petroleo ? `${NUM3.format(row.petroleo)} m³` : "—"}</td>
+        <td>${consumption ? `${NUM1.format(consumption)} kg` : "—"}</td>
+        <td>${yieldKmKg ? `${NUM.format(yieldKmKg)} km/kg` : "—"}</td>
+        <td class="${cost !== null ? "good" : "pending"}">${cost !== null ? BRL.format(cost) : "Pendente"}</td>
+        <td>${costKm !== null ? BRL.format(costKm) : "—"}</td>
+        <td>${BRL.format(row.cteLiq || 0)}</td>
+      </tr>`;
+    }).join("");
+  }
+
   function renderDre(rows) {
     const operational = Object.fromEntries(groupByMonth(rows).map(month => [month.key, month]));
     const firstDreMonth = Object.keys(DRE).sort()[0];
@@ -554,6 +613,7 @@
     renderKpis(rows);
     renderMonthly(comparisonRows());
     renderFuel(rows);
+    renderTripCycle(rows);
     renderDre(comparisonRows());
     renderRanking("prDriverRanking", groupRows(rows, "motorista"), "driver");
     renderRanking("prFleetRanking", groupRows(rows, "cavalo"), "fleet");
@@ -568,6 +628,7 @@
     });
     $("prMonthHead").innerHTML = "";
     $("prMonthBody").innerHTML = "";
+    renderTripCycle([]);
     renderDre([]);
     renderDetails([]);
   }

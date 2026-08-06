@@ -151,6 +151,19 @@
 .pr-fuel-row.diesel .pr-fuel-track i{background:linear-gradient(90deg,#824421,#f08a3c)}
 .pr-fuel-row b{text-align:right;color:#d7ded9;font-size:9px}
 .pr-assumption,.pr-data-note{margin:15px 0 0;color:#68746d;font-size:9px;line-height:1.5}
+.pr-trip-panel{margin-bottom:10px}
+.pr-trip-overview{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}
+.pr-trip-metric{position:relative;min-height:108px;padding:15px;overflow:hidden;border:1px solid rgba(255,255,255,.08);border-radius:11px;background:linear-gradient(145deg,rgba(14,24,18,.96),rgba(5,11,7,.98))}
+.pr-trip-metric:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--pr-lime),transparent 75%)}
+.pr-trip-metric.blue:after{background:linear-gradient(90deg,var(--pr-blue),transparent 75%)}
+.pr-trip-metric.featured{border-color:rgba(183,214,50,.34);background:linear-gradient(145deg,rgba(183,214,50,.13),rgba(5,11,7,.98))}
+.pr-trip-metric span{display:block;min-height:24px;color:#7f8c84;font-size:8px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}
+.pr-trip-metric strong{display:block;margin-top:7px;color:#f4f7f4;font-size:19px;line-height:1.05}
+.pr-trip-metric.featured strong{color:#d9ef7d}
+.pr-trip-metric em{display:block;margin-top:7px;color:#6e7b72;font-size:9px;font-style:normal}
+.pr-trip-table{max-height:390px;margin-top:14px;border-top:1px solid rgba(255,255,255,.06)}
+.pr-trip-table table{min-width:1120px}
+.pr-trip-table thead{position:sticky;top:0;z-index:1;background:#0a110c}
 .pr-dre-panel{margin-bottom:10px}
 .pr-ranking{display:grid;gap:8px}
 .pr-rank-row{display:grid;grid-template-columns:28px minmax(130px,1fr) minmax(90px,.8fr) auto;gap:10px;align-items:center;padding:10px 11px;border:1px solid rgba(255,255,255,.06);border-radius:10px;background:rgba(0,0,0,.12)}
@@ -177,6 +190,7 @@
   .pr-filterbar{grid-template-columns:repeat(3,1fr)}
   .pr-clear{width:100%}
   .pr-kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .pr-trip-overview{grid-template-columns:repeat(3,1fr)}
   .pr-grid-main{grid-template-columns:1fr}
 }
 @media(max-width:760px){
@@ -186,6 +200,7 @@
   .pr-source-actions{justify-content:flex-start}
   .pr-filterbar{grid-template-columns:1fr 1fr}
   .pr-kpi-grid,.pr-grid-ranking{grid-template-columns:1fr}
+  .pr-trip-overview{grid-template-columns:repeat(2,1fr)}
   .pr-kpi{min-height:105px}
   .pr-panel{padding:16px!important}
   .pr-panel-title{align-items:flex-start;flex-direction:column;gap:8px}
@@ -196,6 +211,7 @@
   .pr-filterbar{grid-template-columns:1fr}
   .pr-fuel-cards{grid-template-columns:1fr}
   .pr-fuel-card.saving{grid-column:auto}
+  .pr-trip-overview{grid-template-columns:1fr}
 }
 @media print{
   .pr-filterbar,.pr-source-actions,.pr-details{display:none!important}
