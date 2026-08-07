@@ -203,3 +203,26 @@
   .pr-grid-main,.pr-grid-ranking{grid-template-columns:1fr 1fr}
   .pr-kpi-grid{grid-template-columns:repeat(4,1fr)}
 }
+/* Ocultar somente os 4 KPIs inferiores */
+#prKpis .pr-kpi:nth-child(5),
+#prKpis .pr-kpi:nth-child(6),
+#prKpis .pr-kpi:nth-child(7),
+#prKpis .pr-kpi:nth-child(8) {
+  display: none !important;
+}
+
+/* Reorganizar os 4 KPIs restantes */
+#prKpis {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+/* Comparação Mensal em largura total */
+.pr-grid-main {
+  grid-template-columns: 1fr !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.pr-grid-main > .pr-panel {
+  width: 100% !important;
+  max-width: 100% !important;
+}
